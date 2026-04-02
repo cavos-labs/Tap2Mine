@@ -4,6 +4,7 @@ const KEY_USER = "tap2mine_user";
 const KEY_BEST = "tap2mine_best_taps";
 const KEY_HISTORY = "tap2mine_history";
 const KEY_BOARD = "tap2mine_leaderboard_entries";
+const KEY_REGISTRY = "tap2mine_registered_users";
 
 function ls(): Storage | null {
   if (typeof window === "undefined") return null;
@@ -33,6 +34,52 @@ export function clearUsername() {
   const storage = ls();
   if (!storage) return;
   storage.removeItem(KEY_USER);
+}
+
+function normalizeUsernameKey(name: string): string {
+  return name.trim().toLowerCase();
+}
+
+function readRegistryUsernames(): string[] {
+  const storage = ls();
+  if (!storage) return [];
+  try {
+    const raw = storage.getItem(KEY_REGISTRY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((x): x is string => typeof x === "string");
+  } catch {
+    return [];
+  }
+}
+
+/** If this handle exists (case-insensitive), return the stored spelling. */
+export function resolveRegisteredUsername(input: string): string | null {
+  const key = normalizeUsernameKey(input);
+  for (const u of readRegistryUsernames()) {
+    if (normalizeUsernameKey(u) === key) return u;
+  }
+  return null;
+}
+
+/**
+ * Adds username to the local registry if that handle is not already stored
+ * (case-insensitive). Returns true if it was new, false if it already existed.
+ */
+export function registerUsernameIfNew(username: string): boolean {
+  const storage = ls();
+  if (!storage) return true;
+  const trimmed = username.trim();
+  if (!trimmed) return false;
+  const key = normalizeUsernameKey(trimmed);
+  const list = readRegistryUsernames();
+  if (list.some((u) => normalizeUsernameKey(u) === key)) {
+    return false;
+  }
+  list.push(trimmed);
+  storage.setItem(KEY_REGISTRY, JSON.stringify(list));
+  return true;
 }
 
 export function readBestTaps(username: string): number {

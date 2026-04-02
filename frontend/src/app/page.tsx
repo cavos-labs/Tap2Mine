@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AuthModal } from "@/components/auth-modal";
@@ -80,7 +81,9 @@ export default function Home() {
         open={authOpen}
         onClose={() => setAuthOpen(false)}
         onAuthenticated={(username) => {
-          login(username);
+          flushSync(() => {
+            login(username);
+          });
           router.push("/player");
         }}
       />
