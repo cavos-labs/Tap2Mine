@@ -1,6 +1,6 @@
 # Tap2Mine — Backend
 
-Minimal Next.js service exposing Bitcoin reference price for the frontend.
+Standalone Next.js service exposing Bitcoin reference price for the frontend. It is a separate Node project from `frontend/` (own `package.json` and `npm install`).
 
 ## Setup
 
@@ -47,5 +47,5 @@ CORS is open (`*`) so the browser on `localhost:3000` can call this endpoint dur
 
 - `npm run dev` — development server on port 3001  
 - `npm run build` — production build  
-- `npm run start` — production server  
+- `npm run start` — production server on port **3001** (same as dev)  
 - `npm run lint` — ESLint  

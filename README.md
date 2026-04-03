@@ -2,7 +2,9 @@
 
 A 15-second tap game (1 imaginary BTC per tap), a **username**-based leaderboard, and Bitcoin-inspired UI.
 
-This repo splits the app into two Next.js projects:
+## Two separate Next.js apps
+
+There is **no root `package.json`** and **no npm workspaces**. `frontend/` and `backend/` are fully independent: each has its own dependencies, lockfile, and dev server. Install and run them from their own folders (see below).
 
 - **`frontend/`** — App Router UI (dashboard, mock auth, player hub, game). See [frontend/README.md](frontend/README.md).
 - **`backend/`** — Minimal API (`GET /api/btc-price`). See [backend/README.md](backend/README.md).

@@ -1,6 +1,6 @@
 # Tap2Mine — Frontend
 
-Next.js App Router app for Tap2Mine: home with **Start** and leaderboard, mock auth modal, player profile (`/player`), and game flow (`/game`).
+Standalone Next.js App Router app for Tap2Mine: home with **Start** and leaderboard, mock auth modal, player profile (`/player`), and game flow (`/game`). It does not share a root `package.json` with the backend—run everything from this directory.
 
 ## Setup
 
