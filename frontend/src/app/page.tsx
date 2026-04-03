@@ -28,11 +28,11 @@ export default function Home() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="border-b border-[var(--btc-border)] bg-black/40 px-4 py-3 backdrop-blur-md sm:px-6 sm:py-4">
+      <header className="border-b border-white/5 bg-transparent px-4 py-3 sm:px-6 sm:py-4">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
           <Link
             href="/"
-            className="font-mono text-lg tracking-tight text-[var(--btc-orange)]"
+            className="font-mono text-lg font-medium tracking-tight text-white"
           >
             Tap2Mine
           </Link>
@@ -51,15 +51,14 @@ export default function Home() {
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-6 sm:py-12">
         <section className="text-center">
-          <p className="mb-2 font-mono text-xs uppercase tracking-[0.35em] text-[var(--btc-orange)]">
+          <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.4em] text-[var(--btc-orange)] drop-shadow-md">
             Bitcoin-inspired
           </p>
-          <h1 className="text-balance text-3xl font-semibold tracking-tight text-white sm:text-5xl">
-            Tap. Mine. Repeat.
+          <h1 className="text-balance text-4xl font-semibold tracking-tight text-white sm:text-6xl">
+            Tap. <span className="text-[var(--btc-orange)]">Mine.</span> Repeat.
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-pretty text-sm text-zinc-400 sm:text-base">
-            15 seconds, one button, 1 BTC per tap (imaginary). Your username on
-            the leaderboard. Wire up real auth when you are ready.
+            You have 15 seconds. Tap the button as fast as you can to collect Bitcoins! Can you become the #1 player?
           </p>
           <button
             type="button"
