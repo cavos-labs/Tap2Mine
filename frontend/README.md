@@ -25,7 +25,7 @@ Runs at [http://localhost:3000](http://localhost:3000). Point the app at the API
 
 ## Scripts
 
-- `npm run dev` — development server  
+- `npm run dev` — development server (Turbopack)  
 - `npm run build` — production build  
 - `npm run start` — production server  
 - `npm run lint` — ESLint  

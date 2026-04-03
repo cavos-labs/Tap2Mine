@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   BTC_PER_TAP,
   GAME_DURATION_MS,
@@ -15,6 +15,7 @@ import { usePlayer } from "@/context/player-context";
 type Phase = "rules" | "playing" | "done";
 
 export function GameSession() {
+  const router = useRouter();
   const { recordRound } = usePlayer();
   const [phase, setPhase] = useState<Phase>("rules");
   const [leftMs, setLeftMs] = useState(GAME_DURATION_MS);
@@ -46,8 +47,6 @@ export function GameSession() {
     if (phase !== "playing") return;
     let completed = false;
     endAtRef.current = Date.now() + GAME_DURATION_MS;
-    tapsRef.current = 0;
-    setTapTick(0);
     const id = window.setInterval(() => {
       const left = Math.max(0, endAtRef.current - Date.now());
       setLeftMs(left);
@@ -64,6 +63,8 @@ export function GameSession() {
   }, [phase, finish]);
 
   const startPlaying = () => {
+    tapsRef.current = 0;
+    setTapTick(0);
     setLeftMs(GAME_DURATION_MS);
     setPhase("playing");
   };
@@ -189,12 +190,13 @@ export function GameSession() {
             >
               Play again
             </button>
-            <Link
-              href="/player"
-              className="btc-btn-secondary inline-flex min-h-11 items-center justify-center px-6 py-3 font-mono text-sm"
+            <button
+              type="button"
+              className="btc-btn-secondary inline-flex min-h-11 w-full cursor-pointer items-center justify-center px-6 py-3 font-mono text-sm sm:w-auto"
+              onClick={() => router.push("/player")}
             >
               Back to profile
-            </Link>
+            </button>
           </div>
         </section>
       )}

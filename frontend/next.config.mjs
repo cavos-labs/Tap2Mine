@@ -5,11 +5,6 @@ import { createRequire } from "node:module";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
-/**
- * Absolute package root for deps that must never resolve via a parent
- * directory's package.json (e.g. ~/package-lock.json making the repo root
- * look like the workspace).
- */
 function resolvePackageDir(name) {
   try {
     return path.dirname(
@@ -22,6 +17,7 @@ function resolvePackageDir(name) {
 
 const tailwindcssDir = resolvePackageDir("tailwindcss");
 const tailwindPostcssDir = resolvePackageDir("@tailwindcss/postcss");
+const tailwindIndexCss = path.join(tailwindcssDir, "index.css");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -29,6 +25,7 @@ const nextConfig = {
     root: __dirname,
     resolveAlias: {
       tailwindcss: tailwindcssDir,
+      "tailwindcss/index.css": tailwindIndexCss,
       "@tailwindcss/postcss": tailwindPostcssDir,
     },
   },
@@ -36,6 +33,7 @@ const nextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       tailwindcss: tailwindcssDir,
+      "tailwindcss/index.css": tailwindIndexCss,
       "@tailwindcss/postcss": tailwindPostcssDir,
     };
     return config;
