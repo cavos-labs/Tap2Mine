@@ -8,3 +8,19 @@ export function formatImaginaryBtc(amount: number): string {
 }
 
 export const formatBtc = formatImaginaryBtc;
+
+/** USD for live / game HUD (spot BTC price × mined amount). */
+export function formatUsdApprox(
+  usd: number,
+  opts?: { maximumFractionDigits?: number; minimumFractionDigits?: number }
+): string {
+  if (!Number.isFinite(usd)) return "—";
+  const max = opts?.maximumFractionDigits ?? 0;
+  const min = opts?.minimumFractionDigits ?? 0;
+  return usd.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: max,
+    minimumFractionDigits: min,
+  });
+}

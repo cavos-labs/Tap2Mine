@@ -78,16 +78,16 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-heading"
     >
-      <div className="btc-card relative w-full max-w-[280px] border border-[var(--btc-border)] px-6 py-8 shadow-xl shadow-orange-900/15">
+      <div className="cavos-card relative w-full max-w-[280px] px-6 py-8 shadow-lg shadow-black/6">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-3 top-3 rounded-md p-1.5 text-zinc-500 hover:bg-white/5 hover:text-zinc-300"
+          className="absolute right-3 top-3 rounded-lg p-1.5 text-black/35 transition-colors hover:bg-black/4 hover:text-black/55"
           aria-label="Close"
         >
           ×
@@ -106,7 +106,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
                   setProvider("apple");
                   setStep("username");
                 }}
-                className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--btc-border)] bg-black/40 text-white transition-colors hover:border-[var(--btc-orange)] hover:text-[var(--btc-orange)]"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-[#EAE5DC] bg-[#F7F5F2] text-[#0A0908] transition-colors hover:border-black/15 hover:bg-white"
               >
                 <AppleIcon className="h-7 w-7" />
               </button>
@@ -117,7 +117,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
                   setProvider("google");
                   setStep("username");
                 }}
-                className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--btc-border)] bg-black/40 transition-colors hover:border-[var(--btc-orange)]"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-[#EAE5DC] bg-[#F7F5F2] transition-colors hover:border-black/15 hover:bg-white"
               >
                 <GoogleIcon className="h-7 w-7" />
               </button>
@@ -133,7 +133,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
                 setStep("provider");
                 setProvider(null);
               }}
-              className="self-start font-mono text-xs text-zinc-500 hover:text-[var(--btc-gold)]"
+              className="self-start text-xs font-medium text-black/40 transition-colors hover:text-[#0A0908]"
             >
               ←
             </button>
@@ -150,12 +150,12 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               placeholder="username"
               autoComplete="username"
               autoFocus
-              className="w-full rounded-lg border border-[var(--btc-border)] bg-black/50 px-3 py-2.5 font-mono text-sm text-white placeholder:text-zinc-600 focus:border-[var(--btc-orange)] focus:outline-none focus:ring-1 focus:ring-[var(--btc-orange)]"
+              className="w-full rounded-xl border border-[#EAE5DC] bg-white px-3 py-2.5 text-sm text-[#0A0908] placeholder:text-black/30 focus:border-black/25 focus:outline-none focus:ring-1 focus:ring-black/10"
             />
             <button
               type="button"
               onClick={finish}
-              className="btc-btn-primary py-2.5 font-mono text-sm font-semibold"
+              className="cavos-btn-primary py-2.5 text-sm font-semibold"
             >
               Continue
             </button>
