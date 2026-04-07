@@ -3,10 +3,10 @@
 :root {
   --btc-orange: #f7931a;
   --btc-gold: #f5b041;
-  --btc-bg: #070604;
-  --btc-surface: #0f0d0a;
-  --btc-border: rgba(247, 147, 26, 0.22);
-  --btc-grid: rgba(247, 147, 26, 0.06);
+  --btc-bg: #000000;
+  --btc-surface: #0a0a0a;
+  --btc-border: rgba(255, 255, 255, 0.08);
+  --btc-grid: transparent;
 }
 
 @theme inline {
@@ -21,46 +21,37 @@ body {
   color: #f4f4f5;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   min-height: 100vh;
-  background-image:
-    linear-gradient(var(--btc-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--btc-grid) 1px, transparent 1px);
-  background-size: 48px 48px;
-  background-position: center top;
 }
 
 .btc-card {
-  background: linear-gradient(
-    145deg,
-    rgba(20, 18, 14, 0.95),
-    rgba(10, 9, 7, 0.98)
-  );
+  background: rgba(255, 255, 255, 0.02);
   border-radius: 1rem;
 }
 
 .btc-btn-primary {
-  border-radius: 0.75rem;
-  background: linear-gradient(180deg, var(--btc-orange), #c56b0a);
-  color: #0a0a0a;
-  box-shadow: 0 0 24px rgba(247, 147, 26, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 9999px;
+  background: var(--btc-orange);
+  color: #000000;
+  transition: all 0.2s ease;
 }
 
 .btc-btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 32px rgba(247, 147, 26, 0.5);
+  transform: translateY(-2px);
+  background: #f9a52d;
+  box-shadow: 0 8px 24px rgba(247, 147, 26, 0.25);
 }
 
 .btc-btn-secondary {
-  border-radius: 0.75rem;
+  border-radius: 9999px;
   border: 1px solid var(--btc-border);
-  background: rgba(0, 0, 0, 0.35);
-  color: #e4e4e7;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  background: transparent;
+  color: #a1a1aa;
+  transition: all 0.2s ease;
 }
 
 .btc-btn-secondary:hover {
-  background: rgba(247, 147, 26, 0.08);
-  border-color: rgba(247, 147, 26, 0.45);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
 }
 
 @keyframes btc-warn-glow {
