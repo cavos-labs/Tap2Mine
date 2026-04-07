@@ -3,83 +3,131 @@
 :root {
   --btc-orange: #f7931a;
   --btc-gold: #f5b041;
-  --btc-bg: #000000;
-  --btc-surface: #0a0a0a;
-  --btc-border: rgba(255, 255, 255, 0.08);
-  --btc-grid: transparent;
+  /** Solid fills for primary actions — saturated, not pale */
+  --btc-btn-solid: #ea860f;
+  --btc-btn-solid-hover: #d97706;
+  --btc-orange-muted: rgba(247, 147, 26, 0.14);
+  --cavos-bg: #ffffff;
+  --cavos-fg: #0a0908;
+  --cavos-muted: rgba(10, 9, 8, 0.45);
+  --cavos-border: #eae5dc;
+  --cavos-surface: #fffbf5;
+  --cavos-accent-soft: #c4bfb6;
 }
 
 @theme inline {
-  --color-background: var(--btc-bg);
-  --color-foreground: #f4f4f5;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--cavos-bg);
+  --color-foreground: var(--cavos-fg);
+  --color-btc-orange: #f7931a;
+  --color-btc-gold: #f5b041;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
 }
 
 body {
-  background-color: var(--btc-bg);
-  color: #f4f4f5;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
-  min-height: 100vh;
+  color: var(--cavos-fg);
+  font-family: var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  letter-spacing: -0.02em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Mostly white; soft warm BTC wash from the top */
+  background-color: #ffffff;
+  background-image: radial-gradient(
+    ellipse 100% 55% at 50% -8%,
+    rgba(247, 147, 26, 0.07) 0%,
+    transparent 52%
+  );
 }
 
-.btc-card {
-  background: rgba(255, 255, 255, 0.02);
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fff8f0;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(247, 147, 26, 0.45);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 88, 12, 0.55);
+}
+
+.cavos-card {
+  background: #ffffff;
+  border: 1px solid rgba(247, 147, 26, 0.14);
   border-radius: 1rem;
+  box-shadow: 0 1px 0 rgba(247, 147, 26, 0.05);
 }
 
-.btc-btn-primary {
-  border-radius: 9999px;
-  background: var(--btc-orange);
-  color: #000000;
+.cavos-btn-primary {
+  border-radius: 0.75rem;
+  background-color: var(--btc-btn-solid);
+  color: #141109;
+  font-weight: 600;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 14px rgba(234, 134, 15, 0.4);
+}
+
+.cavos-btn-primary:hover {
+  background-color: var(--btc-btn-solid-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.45);
+}
+
+.cavos-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.cavos-btn-secondary {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(10, 9, 8, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(10, 9, 8, 0.55);
+  font-weight: 600;
   transition: all 0.2s ease;
 }
 
-.btc-btn-primary:hover {
-  transform: translateY(-2px);
-  background: #f9a52d;
-  box-shadow: 0 8px 24px rgba(247, 147, 26, 0.25);
+.cavos-btn-secondary:hover {
+  background: rgba(10, 9, 8, 0.04);
+  color: #0a0908;
+  border-color: rgba(10, 9, 8, 0.18);
 }
 
-.btc-btn-secondary {
-  border-radius: 9999px;
-  border: 1px solid var(--btc-border);
-  background: transparent;
-  color: #a1a1aa;
-  transition: all 0.2s ease;
-}
-
-.btc-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-}
-
-@keyframes btc-warn-glow {
+@keyframes cavos-warn-glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(247, 147, 26, 0.25);
+    box-shadow: 0 0 0 1px rgba(247, 147, 26, 0.25),
+      0 8px 32px rgba(247, 147, 26, 0.28);
   }
   50% {
-    box-shadow: 0 0 36px rgba(247, 147, 26, 0.55);
+    box-shadow: 0 0 0 1px rgba(247, 147, 26, 0.4),
+      0 12px 40px rgba(247, 147, 26, 0.4);
   }
 }
 
-@keyframes btc-critical-glow {
+@keyframes cavos-critical-glow {
   0%,
   100% {
-    box-shadow: 0 0 24px rgba(239, 68, 68, 0.35);
-    filter: brightness(1);
+    box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.25),
+      0 8px 28px rgba(220, 38, 38, 0.2);
   }
   50% {
-    box-shadow: 0 0 48px rgba(239, 68, 68, 0.65);
-    filter: brightness(1.08);
+    box-shadow: 0 0 0 1px rgba(185, 28, 28, 0.45),
+      0 14px 44px rgba(220, 38, 38, 0.35);
   }
 }
 
-.btc-pulse-warn {
-  animation: btc-warn-glow 0.9s ease-in-out infinite;
+.cavos-pulse-warn {
+  animation: cavos-warn-glow 0.9s ease-in-out infinite;
 }
 
-.btc-pulse-critical {
-  animation: btc-critical-glow 0.45s ease-in-out infinite;
+.cavos-pulse-critical {
+  animation: cavos-critical-glow 0.45s ease-in-out infinite;
 }
