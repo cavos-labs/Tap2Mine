@@ -31,7 +31,9 @@ export const dictionaries = {
       heroOrange: "Mina.",
       heroMuted: "Repite.",
       subtitle:
-        "Tienes 15 segundos. ¡Pulsa el botón lo más rápido que puedas para sumar puntos en Bitcoin! ¿Llegarás al #1?",
+        "Tienes 15 segundos para minar la mayor cantidad de BTC.",
+      reward:
+        "🏆 ¡Los 3 primeros de la tabla recibirán un cupón para un café molido premium de CofiBlocks!",
       start: "Comenzar",
     },
     player: {
@@ -77,6 +79,7 @@ export const dictionaries = {
     },
     footer: {
       poweredBy: "Con la tecnología de",
+      collaboration: "Una colaboración de",
     },
     auth: {
       signIn: "Iniciar sesión",
@@ -111,7 +114,9 @@ export const dictionaries = {
       heroOrange: "Mine.",
       heroMuted: "Repeat.",
       subtitle:
-        "You have 15 seconds. Tap the button as fast as you can to collect Bitcoin scores! Can you become the #1 player?",
+        "You have 15 seconds to mine as much BTC as possible.",
+      reward:
+        "🏆 The top 3 on the leaderboard will receive a premium ground coffee coupon from CofiBlocks!",
       start: "Start",
     },
     player: {
@@ -155,6 +160,7 @@ export const dictionaries = {
     },
     footer: {
       poweredBy: "Powered by",
+      collaboration: "A collaboration by",
     },
     auth: {
       signIn: "Sign in",

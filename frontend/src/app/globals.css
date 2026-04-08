@@ -140,3 +140,9 @@ body {
 .cavos-pulse-critical {
   animation: cavos-critical-glow 0.45s ease-in-out infinite;
 }
+
+@keyframes sweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateX(100%); opacity: 0; }
+}

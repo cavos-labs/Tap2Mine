@@ -60,9 +60,7 @@ export default function Home() {
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-8 sm:gap-10 sm:px-6 sm:py-12">
         <section className="text-center">
-          <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em] text-black/30">
-            {t("home.badge")}
-          </p>
+
           <h1 className="text-balance text-4xl font-bold tracking-tighter text-[#0A0908] sm:text-6xl sm:leading-[1.05]">
             {t("home.heroLine1")}{" "}
             <span className="text-btc-orange">{t("home.heroOrange")}</span>{" "}
@@ -71,6 +69,11 @@ export default function Home() {
           <p className="mx-auto mt-4 max-w-xl text-pretty text-sm leading-relaxed text-black/45 sm:text-base">
             {t("home.subtitle")}
           </p>
+          <div className="mx-auto mt-4 max-w-lg rounded-xl border border-btc-orange/20 bg-btc-orange/5 px-4 py-3 sm:mt-5 sm:px-5 sm:py-4">
+            <p className="text-pretty text-sm font-medium leading-relaxed text-[#0A0908] sm:text-base">
+              {t("home.reward")}
+            </p>
+          </div>
           <button
             type="button"
             onClick={onStart}
