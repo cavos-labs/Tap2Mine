@@ -1,4 +1,7 @@
+"use client";
+
 import type { LeaderboardRow } from "@/lib/types";
+import { useI18n } from "@/context/locale-context";
 import { formatBtc } from "@/lib/format";
 
 type Props = {
@@ -8,8 +11,8 @@ type Props = {
   priceUsd: number | null;
 };
 
-function formatUsd(btc: number, priceUsd: number) {
-  return new Intl.NumberFormat("en-US", {
+function formatUsd(btc: number, priceUsd: number, numberLocale: string) {
+  return new Intl.NumberFormat(numberLocale, {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 6,
@@ -21,60 +24,100 @@ export function LeaderboardPanel({
   highlightUsername,
   priceUsd,
 }: Props) {
+  const { t, intlLocale } = useI18n();
+
   return (
-    <section className="cavos-card p-4 sm:p-6">
-      <h2 className="mb-1 text-sm font-semibold tracking-wide text-[#0A0908]">
-        Leaderboard
-      </h2>
-      <p className="mb-4 text-[11px] leading-snug text-black/40 sm:text-xs">
-        Top players with the highest score from a 15-second game.
-      </p>
+    <section className="relative overflow-hidden rounded-2xl border border-black/5 bg-[#F7F5F2] p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:p-6">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-btc-orange/5 blur-[80px] rounded-full pointer-events-none" />
+      
+      <div className="relative z-10">
+        <h2 className="mb-1 text-sm font-semibold tracking-wide text-[#0A0908]">
+          {t("leaderboard.title")}
+        </h2>
+        <p className="mb-4 text-[11px] leading-snug text-black/40 sm:text-xs">
+          {t("leaderboard.subtitle")}
+        </p>
 
-      <div className="mb-2 hidden grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] gap-x-3 border-b border-black/[0.06] pb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-black/35 sm:grid">
-        <span>#</span>
-        <span>Player</span>
-        <span className="text-right">BTC</span>
-        <span className="text-right">USD ~</span>
+        <div className="mb-3 hidden grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] gap-x-3 border-b border-black/6 px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-black/35 sm:grid">
+          <span>{t("leaderboard.colRank")}</span>
+          <span>{t("leaderboard.colPlayer")}</span>
+          <span className="text-right">{t("leaderboard.colBtc")}</span>
+          <span className="text-right">{t("leaderboard.colUsd")}</span>
+        </div>
+
+        <ul className="space-y-2">
+          {rows.map((row, i) => {
+            const isYou = highlightUsername && row.username === highlightUsername;
+            const rank = i + 1;
+            const isPodium = rank <= 3;
+            const isTop1 = rank === 1;
+            const isTop2 = rank === 2;
+
+            const baseRow =
+              "relative px-3 py-3 text-sm font-medium sm:grid sm:grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-3 sm:py-3";
+
+            const rowClasses = [
+              baseRow,
+              "rounded-xl border transition-colors duration-200",
+              isPodium
+                ? isTop1
+                  ? "border-amber-300/55 bg-linear-to-br from-amber-50 to-orange-50/90 shadow-sm shadow-amber-900/5 ring-1 ring-amber-400/15"
+                  : isTop2
+                    ? "border-black/10 bg-linear-to-br from-[#f3f0ea] to-[#ebe4d8] shadow-sm ring-1 ring-black/5"
+                    : "border-[#ea860f]/30 bg-linear-to-br from-[#fff8f0] to-[#ffecd4]/80 shadow-sm ring-1 ring-btc-orange/12"
+                : isYou
+                  ? "border-black/8 bg-[#F7F5F2] hover:bg-[#f2efe9]"
+                  : "border-black/6 bg-white/65 hover:bg-white/95",
+            ].join(" ");
+
+            return (
+              <li key={`${row.username}-${i}`} className={rowClasses}>
+                <span
+                  className={`mb-2 inline-block w-6 tabular-nums sm:mb-0 ${
+                    isPodium
+                      ? "font-bold text-[#0A0908]"
+                      : "font-medium text-black/35"
+                  }`}
+                >
+                  {rank}
+                </span>
+                <span className="mb-2 flex flex-wrap items-center gap-2 text-[#0A0908] sm:mb-0">
+                  {row.username}
+                  {isYou && (
+                    <span className="rounded-md bg-[#ea860f] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm ring-1 ring-black/5">
+                      {t("common.you")}
+                    </span>
+                  )}
+                  {isPodium && (
+                    <span
+                      className="text-[12px] drop-shadow-sm"
+                      title="CofiBlocks"
+                      aria-hidden
+                    >
+                      ☕️
+                    </span>
+                  )}
+                </span>
+                <span
+                  className={`mb-1 block text-right tabular-nums font-semibold sm:mb-0 ${
+                    isPodium ? "text-[#0A0908]" : "text-[#0A0908]"
+                  }`}
+                >
+                  {formatBtc(row.bestBtcMined, intlLocale)}
+                </span>
+                <span className="block text-right tabular-nums text-black/40 sm:mb-0">
+                  {priceUsd != null
+                    ? formatUsd(row.bestBtcMined, priceUsd, intlLocale)
+                    : "—"}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+        {rows.length === 0 && (
+          <p className="text-sm text-black/40 pt-2">{t("leaderboard.empty")}</p>
+        )}
       </div>
-
-      <ul className="space-y-2">
-        {rows.map((row, i) => {
-          const isYou = highlightUsername && row.username === highlightUsername;
-          return (
-            <li
-              key={`${row.username}-${i}`}
-              className={`border-b border-black/[0.05] px-3 py-3 text-sm font-medium last:border-0 sm:grid sm:grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-3 sm:py-3 ${
-                isYou
-                  ? "rounded-xl bg-[#F7F5F2]"
-                  : "hover:bg-black/[0.02]"
-              }`}
-            >
-              <span className="mb-2 inline-block w-6 tabular-nums text-black/35 sm:mb-0">
-                {i + 1}
-              </span>
-              <span className="mb-2 flex flex-wrap items-center gap-2 text-black sm:mb-0">
-                {row.username}
-                {isYou && (
-                  <span className="rounded-md bg-[#ea860f] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
-                    you
-                  </span>
-                )}
-              </span>
-              <span className="mb-1 block text-right tabular-nums font-semibold text-[#0A0908] sm:mb-0">
-                {formatBtc(row.bestBtcMined)}
-              </span>
-              <span className="block text-right tabular-nums text-black/40 sm:mb-0">
-                {priceUsd != null
-                  ? formatUsd(row.bestBtcMined, priceUsd)
-                  : "—"}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-      {rows.length === 0 && (
-        <p className="text-sm text-black/40">No players yet.</p>
-      )}
     </section>
   );
 }

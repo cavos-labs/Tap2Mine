@@ -5,6 +5,7 @@ import {
   registerUsernameIfNew,
   resolveRegisteredUsername,
 } from "@/lib/storage";
+import { useI18n } from "@/context/locale-context";
 
 type AuthModalProps = {
   open: boolean;
@@ -49,6 +50,7 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
+  const { t } = useI18n();
   const [step, setStep] = useState<"provider" | "username">("provider");
   const [provider, setProvider] = useState<"apple" | "google" | null>(null);
   const [username, setUsername] = useState("");
@@ -88,7 +90,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
           type="button"
           onClick={onClose}
           className="absolute right-3 top-3 rounded-lg p-1.5 text-black/35 transition-colors hover:bg-black/4 hover:text-black/55"
-          aria-label="Close"
+          aria-label={t("common.close")}
         >
           ×
         </button>
@@ -96,12 +98,12 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
         {step === "provider" && (
           <div className="flex flex-col items-center gap-6 pt-2">
             <h2 id="auth-heading" className="sr-only">
-              Sign in
+              {t("auth.signIn")}
             </h2>
             <div className="flex items-center justify-center gap-8">
               <button
                 type="button"
-                aria-label="Continue with Apple"
+                aria-label={t("auth.continueApple")}
                 onClick={() => {
                   setProvider("apple");
                   setStep("username");
@@ -112,7 +114,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               </button>
               <button
                 type="button"
-                aria-label="Continue with Google"
+                aria-label={t("auth.continueGoogle")}
                 onClick={() => {
                   setProvider("google");
                   setStep("username");
@@ -138,7 +140,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               ←
             </button>
             <label className="sr-only" htmlFor="auth-username">
-              Username
+              {t("common.username")}
             </label>
             <input
               id="auth-username"
@@ -147,7 +149,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               onKeyDown={(e) => {
                 if (e.key === "Enter") finish();
               }}
-              placeholder="username"
+              placeholder={t("auth.placeholder")}
               autoComplete="username"
               autoFocus
               className="w-full rounded-xl border border-[#EAE5DC] bg-white px-3 py-2.5 text-sm text-[#0A0908] placeholder:text-black/30 focus:border-black/25 focus:outline-none focus:ring-1 focus:ring-black/10"
@@ -157,7 +159,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               onClick={finish}
               className="cavos-btn-primary py-2.5 text-sm font-semibold"
             >
-              Continue
+              {t("auth.continue")}
             </button>
             <p className="sr-only" aria-live="polite">
               {provider === "apple" ? "Apple" : "Google"} (placeholder)

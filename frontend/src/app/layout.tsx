@@ -12,7 +12,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "Tap2Mine",
-  description: "Tap fast, mine imaginary BTC, and climb the leaderboard.",
+  description:
+    "Toca rápido, mina BTC imaginario y sube en la clasificación. / Tap fast, mine imaginary BTC, climb the leaderboard.",
 };
 
 export default function RootLayout({
@@ -22,15 +23,15 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       className={`${romagothicbold.variable} ${geist.variable} h-full`}
     >
       <body className="flex min-h-full flex-col antialiased">
         <div className="flex min-h-screen flex-col bg-white">
           <Providers>
             <div className="flex flex-1 flex-col">{children}</div>
+            <CavosSiteFooter />
           </Providers>
-          <CavosSiteFooter />
         </div>
       </body>
     </html>

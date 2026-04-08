@@ -1,0 +1,181 @@
+export type Locale = "es" | "en";
+
+export const DEFAULT_LOCALE: Locale = "es";
+
+export const LOCALE_STORAGE_KEY = "tap2mine-locale";
+
+/** Nested UI copy — English in `en`, Spanish in `es`. */
+export const dictionaries = {
+  es: {
+    common: {
+      guest: "Invitado",
+      loading: "Cargando…",
+      close: "Cerrar",
+      you: "tú",
+      username: "Usuario",
+      btc: "BTC",
+      taps: "toques",
+    },
+    nav: {
+      home: "← Inicio",
+      profile: "← Perfil",
+    },
+    language: {
+      es: "ES",
+      en: "EN",
+      label: "Idioma",
+    },
+    home: {
+      badge: "Minijuego casual",
+      heroLine1: "Toca.",
+      heroOrange: "Mina.",
+      heroMuted: "Repite.",
+      subtitle:
+        "Tienes 15 segundos para minar la mayor cantidad de BTC.",
+      reward:
+        "🏆 ¡Los 3 primeros de la tabla recibirán un cupón para un café molido premium de CofiBlocks!",
+      start: "Comenzar",
+    },
+    player: {
+      title: "Tu perfil",
+      bestRound:
+        "Mejor ronda de 15 s en este dispositivo (1 BTC imaginario por toque).",
+      newGame: "Nueva partida",
+      recentGames: "Partidas recientes",
+      noGames: "Aún no hay partidas. ¡Juega una ronda!",
+      logOut: "Cerrar sesión",
+      historyLine: "{taps} toques · {btc}",
+    },
+    game: {
+      rulesTitle: "Reglas",
+      rule1: "Tienes 15 segundos para tocar lo más rápido que puedas.",
+      rule2: "Cada toque mina 1 BTC imaginario.",
+      rule3:
+        "Cuando queden 10 segundos o menos empieza un pulso suave; bajo 5 segundos se intensifica.",
+      rule4: "Tu mejor ronda cuenta en la tabla con tu nombre de usuario.",
+      start: "Empezar",
+      roundOver: "Ronda terminada",
+      imaginaryBtc: "BTC imaginario",
+      approxUsd: "Valor aprox. en USD",
+      playAgain: "Jugar de nuevo",
+      backToProfile: "Volver al perfil",
+      tapButton: "TOCA",
+      tapCountBtc: "{count} BTC",
+      loadingPrice: "Cargando precio de BTC…",
+      usdUnavailable: "Estimación en USD no disponible",
+      warn5: "Últimos 5 s — máxima intensidad",
+      warn10: "Últimos 10 s — acelera",
+      priceError: "No disponible",
+    },
+    leaderboard: {
+      title: "Clasificación",
+      subtitle:
+        "Mejores jugadores por puntuación en una partida de 15 segundos.",
+      colRank: "#",
+      colPlayer: "Jugador",
+      colBtc: "BTC",
+      colUsd: "USD ~",
+      empty: "Aún no hay jugadores.",
+    },
+    footer: {
+      poweredBy: "Con la tecnología de",
+      collaboration: "Una colaboración de",
+      altTico: "Tico Blockchain",
+      altCavos: "Cavos",
+      altCofiblocks: "CofiBlocks",
+      altStarknet: "Starknet",
+    },
+    auth: {
+      signIn: "Iniciar sesión",
+      continueApple: "Continuar con Apple",
+      continueGoogle: "Continuar con Google",
+      placeholder: "usuario",
+      continue: "Continuar",
+    },
+  },
+  en: {
+    common: {
+      guest: "Guest",
+      loading: "Loading…",
+      close: "Close",
+      you: "you",
+      username: "Username",
+      btc: "BTC",
+      taps: "taps",
+    },
+    nav: {
+      home: "← Home",
+      profile: "← Profile",
+    },
+    language: {
+      es: "ES",
+      en: "EN",
+      label: "Language",
+    },
+    home: {
+      badge: "Casual mini-game",
+      heroLine1: "Tap.",
+      heroOrange: "Mine.",
+      heroMuted: "Repeat.",
+      subtitle:
+        "You have 15 seconds to mine as much BTC as possible.",
+      reward:
+        "🏆 The top 3 on the leaderboard will receive a premium ground coffee coupon from CofiBlocks!",
+      start: "Start",
+    },
+    player: {
+      title: "Your profile",
+      bestRound: "Best 15s round on this device (1 BTC per tap).",
+      newGame: "New game",
+      recentGames: "Recent games",
+      noGames: "No games yet. Start a round!",
+      logOut: "Log out",
+      historyLine: "{taps} taps · {btc}",
+    },
+    game: {
+      rulesTitle: "Rules",
+      rule1: "You have 15 seconds to tap as fast as you can.",
+      rule2: "Each tap mines 1 imaginary BTC.",
+      rule3:
+        "When 10 seconds or less remain, a soft pulse starts; under 5 seconds it intensifies.",
+      rule4: "Your best round counts on the leaderboard under your username.",
+      start: "start",
+      roundOver: "Round over",
+      imaginaryBtc: "Imaginary BTC",
+      approxUsd: "Approx. USD value",
+      playAgain: "Play again",
+      backToProfile: "Back to profile",
+      tapButton: "TAP",
+      tapCountBtc: "{count} BTC",
+      loadingPrice: "Loading BTC price…",
+      usdUnavailable: "USD estimate unavailable",
+      warn5: "Last 5s — max intensity",
+      warn10: "Last 10s — speed up",
+      priceError: "Unavailable",
+    },
+    leaderboard: {
+      title: "Leaderboard",
+      subtitle: "Top players with the highest score from a 15-second game.",
+      colRank: "#",
+      colPlayer: "Player",
+      colBtc: "BTC",
+      colUsd: "USD ~",
+      empty: "No players yet.",
+    },
+    footer: {
+      poweredBy: "Powered by",
+      collaboration: "A collaboration by",
+      altTico: "Tico Blockchain",
+      altCavos: "Cavos",
+      altCofiblocks: "CofiBlocks",
+      altStarknet: "Starknet",
+    },
+    auth: {
+      signIn: "Sign in",
+      continueApple: "Continue with Apple",
+      continueGoogle: "Continue with Google",
+      placeholder: "username",
+      continue: "Continue",
+    },
+  },
+} as const;

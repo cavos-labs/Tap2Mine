@@ -66,6 +66,15 @@ body {
   box-shadow: 0 1px 0 rgba(247, 147, 26, 0.05);
 }
 
+/** Game rules card: slightly darker than default white so it reads as a panel. */
+.cavos-card.cavos-card--rules {
+  background: #e5ded2;
+  border: 1px solid rgba(10, 9, 8, 0.11);
+  box-shadow:
+    0 1px 0 rgba(247, 147, 26, 0.05),
+    0 10px 36px rgba(10, 9, 8, 0.1);
+}
+
 .cavos-btn-primary {
   border-radius: 0.75rem;
   background-color: var(--btc-btn-solid);
@@ -130,4 +139,10 @@ body {
 
 .cavos-pulse-critical {
   animation: cavos-critical-glow 0.45s ease-in-out infinite;
+}
+
+@keyframes sweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 0.5; }
+  100% { transform: translateX(100%); opacity: 0; }
 }
