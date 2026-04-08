@@ -80,6 +80,10 @@ export const dictionaries = {
     footer: {
       poweredBy: "Con la tecnología de",
       collaboration: "Una colaboración de",
+      altTico: "Tico Blockchain",
+      altCavos: "Cavos",
+      altCofiblocks: "CofiBlocks",
+      altStarknet: "Starknet",
     },
     auth: {
       signIn: "Iniciar sesión",
@@ -161,6 +165,10 @@ export const dictionaries = {
     footer: {
       poweredBy: "Powered by",
       collaboration: "A collaboration by",
+      altTico: "Tico Blockchain",
+      altCavos: "Cavos",
+      altCofiblocks: "CofiBlocks",
+      altStarknet: "Starknet",
     },
     auth: {
       signIn: "Sign in",
