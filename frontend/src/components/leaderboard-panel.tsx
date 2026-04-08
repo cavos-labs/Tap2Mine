@@ -1,4 +1,7 @@
+"use client";
+
 import type { LeaderboardRow } from "@/lib/types";
+import { useI18n } from "@/context/locale-context";
 import { formatBtc } from "@/lib/format";
 
 type Props = {
@@ -8,8 +11,8 @@ type Props = {
   priceUsd: number | null;
 };
 
-function formatUsd(btc: number, priceUsd: number) {
-  return new Intl.NumberFormat("en-US", {
+function formatUsd(btc: number, priceUsd: number, numberLocale: string) {
+  return new Intl.NumberFormat(numberLocale, {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 6,
@@ -21,20 +24,22 @@ export function LeaderboardPanel({
   highlightUsername,
   priceUsd,
 }: Props) {
+  const { t, intlLocale } = useI18n();
+
   return (
     <section className="cavos-card p-4 sm:p-6">
       <h2 className="mb-1 text-sm font-semibold tracking-wide text-[#0A0908]">
-        Leaderboard
+        {t("leaderboard.title")}
       </h2>
       <p className="mb-4 text-[11px] leading-snug text-black/40 sm:text-xs">
-        Top players with the highest score from a 15-second game.
+        {t("leaderboard.subtitle")}
       </p>
 
-      <div className="mb-2 hidden grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] gap-x-3 border-b border-black/[0.06] pb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-black/35 sm:grid">
-        <span>#</span>
-        <span>Player</span>
-        <span className="text-right">BTC</span>
-        <span className="text-right">USD ~</span>
+      <div className="mb-2 hidden grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] gap-x-3 border-b border-black/[0.06] px-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-black/35 sm:grid">
+        <span>{t("leaderboard.colRank")}</span>
+        <span>{t("leaderboard.colPlayer")}</span>
+        <span className="text-right">{t("leaderboard.colBtc")}</span>
+        <span className="text-right">{t("leaderboard.colUsd")}</span>
       </div>
 
       <ul className="space-y-2">
@@ -56,16 +61,16 @@ export function LeaderboardPanel({
                 {row.username}
                 {isYou && (
                   <span className="rounded-md bg-[#ea860f] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
-                    you
+                    {t("common.you")}
                   </span>
                 )}
               </span>
               <span className="mb-1 block text-right tabular-nums font-semibold text-[#0A0908] sm:mb-0">
-                {formatBtc(row.bestBtcMined)}
+                {formatBtc(row.bestBtcMined, intlLocale)}
               </span>
               <span className="block text-right tabular-nums text-black/40 sm:mb-0">
                 {priceUsd != null
-                  ? formatUsd(row.bestBtcMined, priceUsd)
+                  ? formatUsd(row.bestBtcMined, priceUsd, intlLocale)
                   : "—"}
               </span>
             </li>
@@ -73,7 +78,7 @@ export function LeaderboardPanel({
         })}
       </ul>
       {rows.length === 0 && (
-        <p className="text-sm text-black/40">No players yet.</p>
+        <p className="text-sm text-black/40">{t("leaderboard.empty")}</p>
       )}
     </section>
   );

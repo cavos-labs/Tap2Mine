@@ -8,14 +8,16 @@ import {
   PHASE_LAST_10_MS,
   PHASE_LAST_5_MS,
 } from "@/lib/constants";
-import { formatImaginaryBtc, formatUsdApprox } from "@/lib/format";
-import { fetchBtcPriceUsd } from "@/lib/api";
+import { useI18n } from "@/context/locale-context";
 import { usePlayer } from "@/context/player-context";
+import { fetchBtcPriceUsd } from "@/lib/api";
+import { formatImaginaryBtc, formatUsdApprox } from "@/lib/format";
 
 type Phase = "rules" | "playing" | "done";
 
 export function GameSession() {
   const router = useRouter();
+  const { t, intlLocale } = useI18n();
   const { recordRound } = usePlayer();
   const [phase, setPhase] = useState<Phase>("rules");
   const [leftMs, setLeftMs] = useState(GAME_DURATION_MS);
@@ -24,7 +26,7 @@ export function GameSession() {
   const endAtRef = useRef(0);
   const [finalTaps, setFinalTaps] = useState(0);
   const [priceUsd, setPriceUsd] = useState<number | null>(null);
-  const [priceError, setPriceError] = useState<string | null>(null);
+  const [priceUnavailable, setPriceUnavailable] = useState(false);
   /** Spot BTC/USD for live tally during the round (from backend). */
   const [spotPriceUsd, setSpotPriceUsd] = useState<number | null>(null);
   const [spotPriceLoading, setSpotPriceLoading] = useState(true);
@@ -64,10 +66,10 @@ export function GameSession() {
     fetchBtcPriceUsd()
       .then((r) => {
         setPriceUsd(r.priceUsd);
-        setPriceError(null);
+        setPriceUnavailable(false);
       })
       .catch(() => {
-        setPriceError("Unavailable");
+        setPriceUnavailable(true);
         setPriceUsd(null);
       });
   }, [recordRound]);
@@ -108,7 +110,7 @@ export function GameSession() {
   const onTap = () => {
     if (phase !== "playing") return;
     tapsRef.current += 1;
-    setTapTick((t) => t + 1);
+    setTapTick((k) => k + 1);
   };
 
   const leftSec = Math.ceil(leftMs / 1000);
@@ -126,25 +128,22 @@ export function GameSession() {
   return (
     <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-2 sm:gap-8 sm:px-0">
       {phase === "rules" && (
-        <section className="cavos-card p-4 sm:p-6">
+        <section className="cavos-card cavos-card--rules p-4 sm:p-6">
           <h2 className="mb-3 text-base font-bold text-[#0A0908] sm:text-lg">
-            Rules
+            {t("game.rulesTitle")}
           </h2>
           <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-black/55 sm:text-base">
-            <li>You have 15 seconds to tap as fast as you can.</li>
-            <li>Each tap mines 1 imaginary BTC.</li>
-            <li>
-              When 10 seconds or less remain, a soft pulse starts; under 5 seconds
-              it intensifies.
-            </li>
-            <li>Your best round counts on the leaderboard under your username.</li>
+            <li>{t("game.rule1")}</li>
+            <li>{t("game.rule2")}</li>
+            <li>{t("game.rule3")}</li>
+            <li>{t("game.rule4")}</li>
           </ul>
           <button
             type="button"
             className="cavos-btn-primary mt-6 w-full py-3.5 text-sm font-semibold sm:mt-8 sm:py-4 sm:text-base"
             onClick={startPlaying}
           >
-            Got it — start
+            {t("game.start")}
           </button>
         </section>
       )}
@@ -163,10 +162,10 @@ export function GameSession() {
             00:{leftSec.toString().padStart(2, "0")}
           </div>
           {spotPriceLoading && spotPriceUsd == null && (
-            <p className="text-[11px] text-black/40">Loading BTC price…</p>
+            <p className="text-[11px] text-black/40">{t("game.loadingPrice")}</p>
           )}
           {!spotPriceLoading && spotPriceUsd == null && spotPriceError && (
-            <p className="text-[11px] text-black/40">USD estimate unavailable</p>
+            <p className="text-[11px] text-black/40">{t("game.usdUnavailable")}</p>
           )}
           {liveUsdMined != null && (
             <p
@@ -174,7 +173,8 @@ export function GameSession() {
               aria-live="polite"
               aria-atomic="true"
             >
-              ≈ {formatUsdApprox(liveUsdMined)}
+              ≈{" "}
+              {formatUsdApprox(liveUsdMined, { numberLocale: intlLocale })}
             </p>
           )}
           {warn10 && (
@@ -183,7 +183,7 @@ export function GameSession() {
                 warn5 ? "text-red-700" : "text-black/45"
               }`}
             >
-              {warn5 ? "Last 5s — max intensity" : "Last 10s — speed up"}
+              {warn5 ? t("game.warn5") : t("game.warn10")}
             </p>
           )}
           <button
@@ -197,9 +197,9 @@ export function GameSession() {
                   : "border-[#ea860f] bg-[#fff7ed] text-[#0A0908] shadow-[0_8px_32px_rgba(234,134,15,0.28)]"
             }`}
           >
-            TAP
+            {t("game.tapButton")}
             <span className="absolute bottom-[18%] max-w-[90%] truncate px-1 text-[10px] font-semibold tabular-nums text-black/45 sm:bottom-6 sm:text-xs">
-              {tapTick} BTC
+              {t("game.tapCountBtc", { count: tapTick })}
             </span>
           </button>
         </div>
@@ -208,22 +208,22 @@ export function GameSession() {
       {phase === "done" && (
         <section className="cavos-card p-4 text-center sm:p-6">
           <h2 className="text-base font-bold text-[#0A0908] sm:text-lg">
-            Round over
+            {t("game.roundOver")}
           </h2>
           <p className="mt-2 text-2xl font-semibold tabular-nums text-[#0A0908] sm:text-3xl">
-            {finalTaps.toLocaleString("en-US")} taps
+            {finalTaps.toLocaleString(intlLocale)} {t("common.taps")}
           </p>
-          <p className="mt-3 text-sm text-black/45">Imaginary BTC</p>
+          <p className="mt-3 text-sm text-black/45">{t("game.imaginaryBtc")}</p>
           <p className="text-xl font-semibold tabular-nums text-[#0A0908] sm:text-2xl">
-            {formatImaginaryBtc(btcMined)}
+            {formatImaginaryBtc(btcMined, intlLocale)}
           </p>
           <p className="mt-4 text-[10px] font-semibold uppercase tracking-wider text-black/35 sm:text-xs">
-            Approx. USD value
+            {t("game.approxUsd")}
           </p>
           {priceUsd != null && usdApprox != null && (
             <p className="text-lg font-semibold tabular-nums text-emerald-800 sm:text-xl">
               ≈{" "}
-              {usdApprox.toLocaleString("en-US", {
+              {usdApprox.toLocaleString(intlLocale, {
                 style: "currency",
                 currency: "USD",
                 maximumFractionDigits: 0,
@@ -231,8 +231,8 @@ export function GameSession() {
               })}
             </p>
           )}
-          {priceError && (
-            <p className="text-sm text-black/40">{priceError}</p>
+          {priceUnavailable && (
+            <p className="text-sm text-black/40">{t("game.priceError")}</p>
           )}
           <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:justify-center">
             <button
@@ -241,17 +241,17 @@ export function GameSession() {
               onClick={() => {
                 setPhase("rules");
                 setPriceUsd(null);
-                setPriceError(null);
+                setPriceUnavailable(false);
               }}
             >
-              Play again
+              {t("game.playAgain")}
             </button>
             <button
               type="button"
               className="cavos-btn-secondary inline-flex min-h-11 w-full cursor-pointer items-center justify-center px-6 py-3 text-sm sm:w-auto"
               onClick={() => router.push("/player")}
             >
-              Back to profile
+              {t("game.backToProfile")}
             </button>
           </div>
         </section>

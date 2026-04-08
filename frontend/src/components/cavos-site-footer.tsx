@@ -1,12 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useI18n } from "@/context/locale-context";
 
 export function CavosSiteFooter() {
+  const { t } = useI18n();
+
   return (
     <footer className="mt-auto border-t border-[#EAE5DC] bg-[#F7F5F2]">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-center gap-4 px-4 py-10 sm:flex-row sm:gap-6 sm:px-6 sm:py-12">
         <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-black/35">
-          Powered by
+          {t("footer.poweredBy")}
         </span>
         <Link
           href="https://cavos.xyz"
