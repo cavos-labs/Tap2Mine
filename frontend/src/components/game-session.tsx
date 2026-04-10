@@ -128,24 +128,33 @@ export function GameSession() {
   return (
     <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-2 sm:gap-8 sm:px-0">
       {phase === "rules" && (
-        <section className="cavos-card cavos-card--rules p-4 sm:p-6">
-          <h2 className="mb-3 text-base font-bold text-[#0A0908] sm:text-lg">
-            {t("game.rulesTitle")}
-          </h2>
-          <ul className="list-inside list-disc space-y-2 text-sm leading-relaxed text-black/55 sm:text-base">
-            <li>{t("game.rule1")}</li>
-            <li>{t("game.rule2")}</li>
-            <li>{t("game.rule3")}</li>
-            <li>{t("game.rule4")}</li>
-          </ul>
-          <button
-            type="button"
-            className="cavos-btn-primary mt-6 w-full py-3.5 text-sm font-semibold sm:mt-8 sm:py-4 sm:text-base"
-            onClick={startPlaying}
-          >
-            {t("game.start")}
-          </button>
-        </section>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-xs rounded-3xl bg-white px-6 py-8 text-center shadow-2xl sm:max-w-sm sm:px-8 sm:py-10">
+            <p className="text-4xl leading-none">👆</p>
+            <h2 className="mt-3 text-xl font-extrabold text-[#0A0908] sm:text-2xl">
+              {t("game.rulesTitle")}
+            </h2>
+
+            <p className="mt-5 text-base font-medium leading-snug text-black/70 sm:text-lg">
+              {t("game.rule1")}
+            </p>
+            <p className="mt-3 text-sm leading-snug text-black/50 sm:text-base">
+              {t("game.rule2")}
+            </p>
+
+            <button
+              type="button"
+              className="cavos-btn-primary mt-8 w-full py-4 text-base font-bold sm:text-lg"
+              onClick={startPlaying}
+            >
+              {t("game.start")}
+            </button>
+          </div>
+        </div>
       )}
 
       {phase === "playing" && (
@@ -239,9 +248,9 @@ export function GameSession() {
               type="button"
               className="cavos-btn-primary px-6 py-3 text-sm font-semibold"
               onClick={() => {
-                setPhase("rules");
                 setPriceUsd(null);
                 setPriceUnavailable(false);
+                startPlaying();
               }}
             >
               {t("game.playAgain")}
