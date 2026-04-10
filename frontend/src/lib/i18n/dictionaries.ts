@@ -32,8 +32,10 @@ export const dictionaries = {
       heroMuted: "Repite.",
       subtitle:
         "Tienes 15 segundos para minar la mayor cantidad de BTC.",
+      rewardPartnerBadge: "Premio por CofiBlocks",
       reward:
-        "🏆 ¡Los 3 primeros de la tabla recibirán un cupón para un café molido premium de CofiBlocks!",
+        "Los 3 primeros de la tabla reciben un cupón para café molido premium: café de especialidad costarricense, trazabilidad finca–taza.",
+      rewardStoreLink: "Tienda oficial — app.cofiblocks.com",
       start: "Comenzar",
     },
     player: {
@@ -42,18 +44,16 @@ export const dictionaries = {
         "Mejor ronda de 15 s en este dispositivo (1 BTC imaginario por toque).",
       newGame: "Nueva partida",
       recentGames: "Partidas recientes",
+      colDate: "Fecha",
       noGames: "Aún no hay partidas. ¡Juega una ronda!",
       logOut: "Cerrar sesión",
       historyLine: "{taps} toques · {btc}",
     },
     game: {
-      rulesTitle: "Reglas",
-      rule1: "Tienes 15 segundos para tocar lo más rápido que puedas.",
-      rule2: "Cada toque mina 1 BTC imaginario.",
-      rule3:
-        "Cuando queden 10 segundos o menos empieza un pulso suave; bajo 5 segundos se intensifica.",
-      rule4: "Tu mejor ronda cuenta en la tabla con tu nombre de usuario.",
-      start: "Empezar",
+      rulesTitle: "¿Cómo jugar?",
+      rule1: "Toca la pantalla lo más rápido que puedas durante 15 segundos.",
+      rule2: "Los 3 con más toques ganan un paquete de café premium.",
+      start: "¡A tocar!",
       roundOver: "Ronda terminada",
       imaginaryBtc: "BTC imaginario",
       approxUsd: "Valor aprox. en USD",
@@ -119,8 +119,10 @@ export const dictionaries = {
       heroMuted: "Repeat.",
       subtitle:
         "You have 15 seconds to mine as much BTC as possible.",
+      rewardPartnerBadge: "Prize by CofiBlocks",
       reward:
-        "🏆 The top 3 on the leaderboard will receive a premium ground coffee coupon from CofiBlocks!",
+        "The top 3 on the leaderboard get a coupon for premium ground coffee — Costa Rican specialty, farm-to-cup traceability.",
+      rewardStoreLink: "Official store — app.cofiblocks.com",
       start: "Start",
     },
     player: {
@@ -128,18 +130,16 @@ export const dictionaries = {
       bestRound: "Best 15s round on this device (1 BTC per tap).",
       newGame: "New game",
       recentGames: "Recent games",
+      colDate: "Date",
       noGames: "No games yet. Start a round!",
       logOut: "Log out",
       historyLine: "{taps} taps · {btc}",
     },
     game: {
-      rulesTitle: "Rules",
-      rule1: "You have 15 seconds to tap as fast as you can.",
-      rule2: "Each tap mines 1 imaginary BTC.",
-      rule3:
-        "When 10 seconds or less remain, a soft pulse starts; under 5 seconds it intensifies.",
-      rule4: "Your best round counts on the leaderboard under your username.",
-      start: "start",
+      rulesTitle: "How to play?",
+      rule1: "Tap the screen as fast as you can for 15 seconds.",
+      rule2: "The top 3 with the most taps win a premium coffee pack.",
+      start: "Let's go!",
       roundOver: "Round over",
       imaginaryBtc: "Imaginary BTC",
       approxUsd: "Approx. USD value",

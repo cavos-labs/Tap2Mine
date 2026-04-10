@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import type { LeaderboardRow } from "@/lib/types";
 import { useI18n } from "@/context/locale-context";
 import { formatBtc } from "@/lib/format";
@@ -18,6 +19,38 @@ function formatUsd(btc: number, priceUsd: number, numberLocale: string) {
     maximumFractionDigits: 6,
   }).format(btc * priceUsd);
 }
+
+const PODIUM_STYLE: Record<1 | 2 | 3, CSSProperties> = {
+  1: {
+    backgroundColor: "#fef9ec",
+    border: "1px solid rgba(245, 158, 11, 0.35)",
+    boxShadow: "0 2px 8px rgba(180, 83, 9, 0.08)",
+  },
+  2: {
+    backgroundColor: "#f0f2f8",
+    border: "1px solid rgba(100, 116, 139, 0.3)",
+    boxShadow: "0 2px 8px rgba(15, 23, 42, 0.06)",
+  },
+  3: {
+    backgroundColor: "#fff4eb",
+    border: "1px solid rgba(234, 88, 12, 0.3)",
+    boxShadow: "0 2px 8px rgba(234, 88, 12, 0.07)",
+  },
+};
+
+const USD_CHIP_STYLE: CSSProperties = {
+  backgroundColor: "#d1fae5",
+  color: "#047857",
+  border: "1px solid rgba(16, 185, 129, 0.55)",
+  borderRadius: "0.5rem",
+  padding: "0.25rem 0.625rem",
+  fontWeight: 800,
+  fontVariantNumeric: "tabular-nums",
+  letterSpacing: "-0.02em",
+  lineHeight: 1.25,
+  boxShadow:
+    "inset 0 1px 0 rgba(255,255,255,0.65), 0 2px 10px rgba(5, 150, 105, 0.2)",
+};
 
 export function LeaderboardPanel({
   rows,
@@ -42,7 +75,12 @@ export function LeaderboardPanel({
           <span>{t("leaderboard.colRank")}</span>
           <span>{t("leaderboard.colPlayer")}</span>
           <span className="text-right">{t("leaderboard.colBtc")}</span>
-          <span className="text-right">{t("leaderboard.colUsd")}</span>
+          <span
+            className="text-right font-semibold"
+            style={{ color: "#047857" }}
+          >
+            {t("leaderboard.colUsd")}
+          </span>
         </div>
 
         <ul className="space-y-2">
@@ -54,24 +92,23 @@ export function LeaderboardPanel({
             const isTop2 = rank === 2;
 
             const baseRow =
-              "relative px-3 py-3 text-sm font-medium sm:grid sm:grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-3 sm:py-3";
+              "relative px-3 py-3 text-sm font-medium rounded-xl transition-colors duration-200 sm:grid sm:grid-cols-[1.75rem_minmax(0,1fr)_auto_auto] sm:items-center sm:gap-x-3 sm:py-3";
 
             const rowClasses = [
               baseRow,
-              "rounded-xl border transition-colors duration-200",
               isPodium
-                ? isTop1
-                  ? "border-amber-300/55 bg-linear-to-br from-amber-50 to-orange-50/90 shadow-sm shadow-amber-900/5 ring-1 ring-amber-400/15"
-                  : isTop2
-                    ? "border-black/10 bg-linear-to-br from-[#f3f0ea] to-[#ebe4d8] shadow-sm ring-1 ring-black/5"
-                    : "border-[#ea860f]/30 bg-linear-to-br from-[#fff8f0] to-[#ffecd4]/80 shadow-sm ring-1 ring-btc-orange/12"
+                ? ""
                 : isYou
-                  ? "border-black/8 bg-[#F7F5F2] hover:bg-[#f2efe9]"
-                  : "border-black/6 bg-white/65 hover:bg-white/95",
+                  ? "border border-black/8 bg-[#F7F5F2] hover:bg-[#f2efe9]"
+                  : "border border-black/6 bg-white/65 hover:bg-white/95",
             ].join(" ");
 
+            const rowStyle: CSSProperties | undefined = isPodium
+              ? PODIUM_STYLE[rank as 1 | 2 | 3]
+              : undefined;
+
             return (
-              <li key={`${row.username}-${i}`} className={rowClasses}>
+              <li key={`${row.username}-${i}`} className={rowClasses} style={rowStyle}>
                 <span
                   className={`mb-2 inline-block w-6 tabular-nums sm:mb-0 ${
                     isPodium
@@ -105,11 +142,20 @@ export function LeaderboardPanel({
                 >
                   {formatBtc(row.bestBtcMined, intlLocale)}
                 </span>
-                <span className="block text-right tabular-nums text-black/40 sm:mb-0">
-                  {priceUsd != null
-                    ? formatUsd(row.bestBtcMined, priceUsd, intlLocale)
-                    : "—"}
-                </span>
+                <div className="flex justify-end sm:mb-0">
+                  {priceUsd != null ? (
+                    <span
+                      className="inline-block max-w-full text-[13px] sm:text-sm"
+                      style={USD_CHIP_STYLE}
+                    >
+                      {formatUsd(row.bestBtcMined, priceUsd, intlLocale)}
+                    </span>
+                  ) : (
+                    <span className="py-1 text-right text-black/35 tabular-nums">
+                      —
+                    </span>
+                  )}
+                </div>
               </li>
             );
           })}

@@ -45,30 +45,32 @@ const FOOTER_PARTNERS: Partner[] = [
   },
 ];
 
-/** Every logo is capped to the same max height so the strip reads as one bar. */
+/**
+ * Logos: altura máxima uniforme; en móvil más compacto (antes dominaban por min-h alto + celdas 2×2).
+ */
 const IMAGE_CAP =
-  "h-auto w-auto max-h-[2.25rem] max-w-full object-contain object-center sm:max-h-10";
+  "h-auto w-auto max-h-[1.75rem] max-w-[min(100%,5.75rem)] object-contain object-center sm:max-h-10 sm:max-w-full";
 
 export function CavosSiteFooter() {
   const { t } = useI18n();
 
   return (
     <footer className="mt-auto border-t border-[#EAE5DC] bg-[#F7F5F2]">
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-9">
-        <p className="relative z-10 mx-auto mb-6 block max-w-md text-center text-[10px] font-semibold uppercase leading-relaxed tracking-[0.22em] text-black/40 sm:mb-7 sm:max-w-2xl">
+      <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-9">
+        <p className="relative z-10 mx-auto mb-4 block max-w-md text-center text-[10px] font-semibold uppercase leading-relaxed tracking-[0.22em] text-black/40 sm:mb-7 sm:max-w-2xl">
           {t("footer.collaboration")}
         </p>
 
-        <ul className="m-0 mx-auto grid w-full max-w-md list-none grid-cols-2 gap-3 p-0 sm:max-w-3xl sm:grid-cols-4 sm:gap-4">
+        <ul className="m-0 mx-auto grid w-full max-w-[min(100%,20rem)] list-none grid-cols-2 gap-2 p-0 sm:max-w-3xl sm:grid-cols-4 sm:gap-4">
           {FOOTER_PARTNERS.map((p) => (
             <li key={p.href} className="min-w-0">
               <Link
                 href={p.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-18 w-full min-w-0 flex-col items-center justify-center rounded-xl bg-white/75 px-2 py-3 shadow-[0_1px_3px_rgba(10,9,8,0.05)] transition-colors hover:bg-white sm:min-h-19 sm:px-3"
+                className="flex min-h-0 w-full min-w-0 flex-col items-center justify-center rounded-lg bg-white/75 px-1.5 py-2 shadow-[0_1px_3px_rgba(10,9,8,0.05)] transition-colors hover:bg-white sm:rounded-xl sm:px-3 sm:py-3.5"
               >
-                <span className="flex min-h-9 w-full min-w-0 items-center justify-center sm:min-h-10">
+                <span className="flex h-10 w-full min-w-0 items-center justify-center sm:h-12">
                   <Image
                     src={p.src}
                     alt={t(p.altKey)}
@@ -79,8 +81,8 @@ export function CavosSiteFooter() {
                         ? "opacity-95 grayscale-[0.15] transition-[filter,opacity] duration-300 hover:opacity-100 hover:grayscale-0"
                         : "opacity-90 hover:opacity-100"
                     }`}
-                    style={{ width: "auto", height: "auto" }}
-                    sizes="(max-width:640px) 42vw, 140px"
+                    style={{ width: "auto", height: "auto", maxHeight: "100%" }}
+                    sizes="(max-width: 640px) 80px, 140px"
                     priority={false}
                   />
                 </span>
