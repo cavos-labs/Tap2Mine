@@ -32,8 +32,10 @@ export const dictionaries = {
       heroMuted: "Repite.",
       subtitle:
         "Tienes 15 segundos para minar la mayor cantidad de BTC.",
+      rewardPartnerBadge: "Premio por CofiBlocks",
       reward:
-        "🏆 ¡Los 3 primeros de la tabla recibirán un cupón para un café molido premium de CofiBlocks!",
+        "Los 3 primeros de la tabla reciben un cupón para café molido premium: café de especialidad costarricense, trazabilidad finca–taza.",
+      rewardStoreLink: "Tienda oficial — app.cofiblocks.com",
       start: "Comenzar",
     },
     player: {
@@ -119,8 +121,10 @@ export const dictionaries = {
       heroMuted: "Repeat.",
       subtitle:
         "You have 15 seconds to mine as much BTC as possible.",
+      rewardPartnerBadge: "Prize by CofiBlocks",
       reward:
-        "🏆 The top 3 on the leaderboard will receive a premium ground coffee coupon from CofiBlocks!",
+        "The top 3 on the leaderboard get a coupon for premium ground coffee — Costa Rican specialty, farm-to-cup traceability.",
+      rewardStoreLink: "Official store — app.cofiblocks.com",
       start: "Start",
     },
     player: {

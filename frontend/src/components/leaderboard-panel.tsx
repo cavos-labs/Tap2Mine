@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import type { LeaderboardRow } from "@/lib/types";
 import { useI18n } from "@/context/locale-context";
 import { formatBtc } from "@/lib/format";
@@ -18,6 +19,21 @@ function formatUsd(btc: number, priceUsd: number, numberLocale: string) {
     maximumFractionDigits: 6,
   }).format(btc * priceUsd);
 }
+
+/** Colores en inline — el verde se ve siempre (evita utilidades Tailwind no emitidas). */
+const USD_CHIP_STYLE: CSSProperties = {
+  backgroundColor: "#d1fae5",
+  color: "#047857",
+  border: "1px solid rgba(16, 185, 129, 0.55)",
+  borderRadius: "0.5rem",
+  padding: "0.25rem 0.625rem",
+  fontWeight: 800,
+  fontVariantNumeric: "tabular-nums",
+  letterSpacing: "-0.02em",
+  lineHeight: 1.25,
+  boxShadow:
+    "inset 0 1px 0 rgba(255,255,255,0.65), 0 2px 10px rgba(5, 150, 105, 0.2)",
+};
 
 export function LeaderboardPanel({
   rows,
@@ -42,7 +58,12 @@ export function LeaderboardPanel({
           <span>{t("leaderboard.colRank")}</span>
           <span>{t("leaderboard.colPlayer")}</span>
           <span className="text-right">{t("leaderboard.colBtc")}</span>
-          <span className="text-right">{t("leaderboard.colUsd")}</span>
+          <span
+            className="text-right font-semibold"
+            style={{ color: "#047857" }}
+          >
+            {t("leaderboard.colUsd")}
+          </span>
         </div>
 
         <ul className="space-y-2">
@@ -105,11 +126,20 @@ export function LeaderboardPanel({
                 >
                   {formatBtc(row.bestBtcMined, intlLocale)}
                 </span>
-                <span className="block text-right tabular-nums text-black/40 sm:mb-0">
-                  {priceUsd != null
-                    ? formatUsd(row.bestBtcMined, priceUsd, intlLocale)
-                    : "—"}
-                </span>
+                <div className="flex justify-end sm:mb-0">
+                  {priceUsd != null ? (
+                    <span
+                      className="inline-block max-w-full text-[13px] sm:text-sm"
+                      style={USD_CHIP_STYLE}
+                    >
+                      {formatUsd(row.bestBtcMined, priceUsd, intlLocale)}
+                    </span>
+                  ) : (
+                    <span className="py-1 text-right text-black/35 tabular-nums">
+                      —
+                    </span>
+                  )}
+                </div>
               </li>
             );
           })}
