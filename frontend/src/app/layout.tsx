@@ -27,7 +27,7 @@ export default function RootLayout({
       className={`${romagothicbold.variable} ${geist.variable} h-full`}
     >
       <body className="flex min-h-full flex-col antialiased">
-        <div className="flex min-h-screen flex-col bg-white">
+        <div id="app-shell" className="flex min-h-screen flex-col bg-white transition-colors duration-500">
           <Providers>
             <div className="flex flex-1 flex-col">{children}</div>
             <CavosSiteFooter />

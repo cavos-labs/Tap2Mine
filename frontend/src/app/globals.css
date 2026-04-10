@@ -146,3 +146,95 @@ body {
   50% { opacity: 0.5; }
   100% { transform: translateX(100%); opacity: 0; }
 }
+
+/* ── Confetti ── */
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(var(--fall)) rotate(var(--spin)) scale(0.5);
+  }
+}
+
+.confetti-piece {
+  position: fixed;
+  pointer-events: none;
+  z-index: 100;
+  width: var(--size);
+  height: calc(var(--size) * 0.6);
+  border-radius: 2px;
+  background-color: var(--clr);
+  animation: confetti-fall var(--dur) ease-out forwards;
+  animation-delay: var(--delay);
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+/* ── Game urgency backgrounds ── */
+
+.game-bg {
+  transition: background-color 0.6s ease;
+}
+
+.game-bg--normal {
+  background-color: #fffbf5;
+}
+
+.game-bg--warn {
+  background-color: #fff3e0;
+  animation: bg-pulse-warn 1.2s ease-in-out infinite;
+}
+
+.game-bg--critical {
+  background-color: #fde8e8;
+  animation: bg-pulse-critical 0.5s ease-in-out infinite;
+}
+
+@keyframes bg-pulse-warn {
+  0%, 100% { background-color: #fff3e0; }
+  50% { background-color: #ffe0b2; }
+}
+
+@keyframes bg-pulse-critical {
+  0%, 100% { background-color: #fde8e8; }
+  50% { background-color: #fca5a5; }
+}
+
+/* ── Coffee bean burst (radial from button) ── */
+
+@keyframes bean-burst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.3);
+  }
+}
+
+.coffee-bean {
+  position: absolute;
+  pointer-events: none;
+  width: 28px;
+  height: 28px;
+  animation: bean-burst 0.65s ease-out forwards;
+  z-index: 30;
+}
+
+@media (min-width: 640px) {
+  .coffee-bean {
+    width: 36px;
+    height: 36px;
+  }
+}

@@ -27,23 +27,23 @@ export default function GamePage() {
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
-      <header className="border-b border-black/5 bg-white/90 px-4 py-2.5 backdrop-blur-sm sm:px-6 sm:py-3">
+      <header className="relative z-30 border-b border-black/8 bg-white/95 px-4 py-2 backdrop-blur-md sm:px-6 sm:py-2.5">
         <div className="mx-auto flex max-w-lg items-center justify-between gap-2">
           <Link
             href="/player"
-            className="text-sm text-black/40 transition-colors hover:text-[#0A0908]"
+            className="text-sm text-black/50 transition-colors hover:text-[#0A0908]"
           >
             {t("nav.profile")}
           </Link>
           <div className="flex items-center gap-2 sm:gap-3">
             <LanguageToggle />
-            <span className="text-xs text-black/35">
+            <span className="text-xs font-medium text-black/40">
               @{user.username}
             </span>
           </div>
         </div>
       </header>
-      <main className="mx-auto flex w-full max-w-lg flex-1 items-center justify-center px-3 py-6 sm:px-6">
+      <main className="relative z-10 mx-auto flex w-full max-w-lg flex-1 items-center justify-center px-3 py-4 sm:px-6">
         <GameSession />
       </main>
     </div>
