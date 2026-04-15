@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { CavosSiteFooter } from "@/components/cavos-site-footer";
+import { CoffeeRainBackground } from "@/components/coffee-rain-background";
 import { Providers } from "@/components/providers";
 import { geist, romagothicbold } from "@/lib/fonts";
 import "./globals.css";
@@ -27,9 +28,10 @@ export default function RootLayout({
       className={`${romagothicbold.variable} ${geist.variable} h-full`}
     >
       <body className="flex min-h-full flex-col antialiased">
-        <div id="app-shell" className="flex min-h-screen flex-col bg-white transition-colors duration-500">
+        <div id="app-shell" className="relative flex min-h-screen flex-col overflow-x-hidden bg-white transition-colors duration-500">
+          <CoffeeRainBackground />
           <Providers>
-            <div className="flex flex-1 flex-col">{children}</div>
+            <div className="relative z-10 flex flex-1 flex-col">{children}</div>
             <CavosSiteFooter />
           </Providers>
         </div>
