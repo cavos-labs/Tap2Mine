@@ -80,27 +80,36 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 p-4 backdrop-blur-sm"
+      className="mobile-safe-bottom fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-heading"
     >
-      <div className="cavos-card relative w-full max-w-[280px] px-6 py-8 shadow-lg shadow-black/6">
+      <div className="card relative w-full max-w-sm px-6 py-8 sm:px-7 sm:py-9">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-3 top-3 rounded-lg p-1.5 text-black/35 transition-colors hover:bg-black/4 hover:text-black/55"
+          className="absolute right-3 top-3 rounded-full p-2 text-[var(--cavos-subtle)] transition-colors hover:bg-black/5 hover:text-[#0A0908]"
           aria-label={t("common.close")}
         >
-          ×
+          <span className="block h-4 w-4 leading-none">×</span>
         </button>
 
         {step === "provider" && (
-          <div className="flex flex-col items-center gap-6 pt-2">
-            <h2 id="auth-heading" className="sr-only">
-              {t("auth.signIn")}
-            </h2>
-            <div className="flex items-center justify-center gap-8">
+          <div className="flex flex-col items-center gap-6 pt-1">
+            <div className="text-center">
+              <span className="eyebrow">{t("auth.eyebrow")}</span>
+              <h2
+                id="auth-heading"
+                className="mt-3 text-xl font-semibold tracking-tight text-[#120c08]"
+              >
+                {t("auth.signIn")}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-[var(--cavos-muted)]">
+                {t("auth.providerCopy")}
+              </p>
+            </div>
+            <div className="flex items-center justify-center gap-5 sm:gap-6">
               <button
                 type="button"
                 aria-label={t("auth.continueApple")}
@@ -108,7 +117,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
                   setProvider("apple");
                   setStep("username");
                 }}
-                className="flex h-14 w-14 items-center justify-center rounded-full border border-[#EAE5DC] bg-[#F7F5F2] text-[#0A0908] transition-colors hover:border-black/15 hover:bg-white"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--cavos-border)] bg-white text-[#0A0908] transition-colors hover:border-[var(--cavos-border-strong)] hover:bg-[var(--cavos-surface-quiet)] sm:h-15 sm:w-15"
               >
                 <AppleIcon className="h-7 w-7" />
               </button>
@@ -119,7 +128,7 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
                   setProvider("google");
                   setStep("username");
                 }}
-                className="flex h-14 w-14 items-center justify-center rounded-full border border-[#EAE5DC] bg-[#F7F5F2] transition-colors hover:border-black/15 hover:bg-white"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-[var(--cavos-border)] bg-white transition-colors hover:border-[var(--cavos-border-strong)] hover:bg-[var(--cavos-surface-quiet)] sm:h-15 sm:w-15"
               >
                 <GoogleIcon className="h-7 w-7" />
               </button>
@@ -135,10 +144,21 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
                 setStep("provider");
                 setProvider(null);
               }}
-              className="self-start text-xs font-medium text-black/40 transition-colors hover:text-[#0A0908]"
+              className="self-start rounded-full px-2.5 py-1 text-xs font-semibold text-[var(--cavos-subtle)] transition-colors hover:text-[#0A0908]"
             >
-              ←
+              ← {t("auth.back")}
             </button>
+            <div>
+              <span className="eyebrow">
+                {provider === "apple" ? "Apple" : "Google"}
+              </span>
+              <h2 className="mt-2 text-lg font-semibold tracking-tight text-[#120c08]">
+                {t("common.username")}
+              </h2>
+              <p className="mt-1 text-sm text-[var(--cavos-muted)]">
+                {t("auth.usernameCopy")}
+              </p>
+            </div>
             <label className="sr-only" htmlFor="auth-username">
               {t("common.username")}
             </label>
@@ -152,12 +172,12 @@ export function AuthModal({ open, onClose, onAuthenticated }: AuthModalProps) {
               placeholder={t("auth.placeholder")}
               autoComplete="username"
               autoFocus
-              className="w-full rounded-xl border border-[#EAE5DC] bg-white px-3 py-2.5 text-sm text-[#0A0908] placeholder:text-black/30 focus:border-black/25 focus:outline-none focus:ring-1 focus:ring-black/10"
+              className="h-12 w-full rounded-xl border border-[var(--cavos-border)] bg-white px-3 text-base text-[#0A0908] placeholder:text-[var(--cavos-subtle)] focus:border-[var(--cavos-border-strong)] focus:outline-none focus:ring-2 focus:ring-[rgba(247,147,26,0.2)] sm:text-[15px]"
             />
             <button
               type="button"
               onClick={finish}
-              className="cavos-btn-primary py-2.5 text-sm font-semibold"
+              className="cavos-btn-primary h-12 text-sm font-semibold sm:text-base"
             >
               {t("auth.continue")}
             </button>

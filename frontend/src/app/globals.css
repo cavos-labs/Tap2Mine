@@ -3,16 +3,19 @@
 :root {
   --btc-orange: #f7931a;
   --btc-gold: #f5b041;
-  /** Solid fills for primary actions — saturated, not pale */
   --btc-btn-solid: #ea860f;
   --btc-btn-solid-hover: #d97706;
-  --btc-orange-muted: rgba(247, 147, 26, 0.14);
+  --btc-orange-soft: rgba(247, 147, 26, 0.08);
+
   --cavos-bg: #ffffff;
   --cavos-fg: #0a0908;
-  --cavos-muted: rgba(10, 9, 8, 0.45);
-  --cavos-border: #eae5dc;
-  --cavos-surface: #fffbf5;
-  --cavos-accent-soft: #c4bfb6;
+  --cavos-muted: rgba(10, 9, 8, 0.55);
+  --cavos-subtle: rgba(10, 9, 8, 0.42);
+  --cavos-border: rgba(70, 45, 22, 0.12);
+  --cavos-border-strong: rgba(70, 45, 22, 0.2);
+  --cavos-surface: #ffffff;
+  --cavos-surface-quiet: #fbf6ee;
+  --cavos-surface-tint: rgba(255, 251, 245, 0.78);
 }
 
 @theme inline {
@@ -28,21 +31,20 @@ body {
   height: 100%;
 }
 
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   color: var(--cavos-fg);
   font-family: var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f6efe5;
-  background-image:
-    radial-gradient(
-      ellipse 90% 55% at 50% -4%,
-      rgba(247, 147, 26, 0.13) 0%,
-      transparent 54%
-    ),
-    linear-gradient(180deg, #fffdf9 0%, #f6efe5 100%);
+  background-image: linear-gradient(180deg, #fffdf9 0%, #f6efe5 100%);
+  text-rendering: optimizeLegibility;
 }
 
 ::-webkit-scrollbar {
@@ -60,128 +62,99 @@ body {
   background: rgba(234, 88, 12, 0.55);
 }
 
-.cavos-card {
-  background: #ffffff;
-  border: 1px solid rgba(247, 147, 26, 0.14);
-  border-radius: 1rem;
-  box-shadow: 0 1px 0 rgba(247, 147, 26, 0.05);
+/* ── Reusable surfaces ── */
+
+.card {
+  background: var(--cavos-surface);
+  border: 1px solid var(--cavos-border);
+  border-radius: 1.25rem;
+  box-shadow: 0 1px 0 rgba(70, 45, 22, 0.04);
 }
 
-/** Game rules card: slightly darker than default white so it reads as a panel. */
-.cavos-card.cavos-card--rules {
-  background: #e5ded2;
-  border: 1px solid rgba(10, 9, 8, 0.11);
-  box-shadow:
-    0 1px 0 rgba(247, 147, 26, 0.05),
-    0 10px 36px rgba(10, 9, 8, 0.1);
+.card-quiet {
+  background: var(--cavos-surface-tint);
+  border: 1px solid var(--cavos-border);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(8px);
 }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #7a5431;
+}
+
+.divider {
+  height: 1px;
+  background: var(--cavos-border);
+  border: 0;
+}
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: rgba(247, 147, 26, 0.1);
+  color: #92400e;
+  font-family: var(--font-romagothicbold), var(--font-geist), sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: -0.02em;
+}
+
+/* ── Buttons ── */
 
 .cavos-btn-primary {
-  border-radius: 0.75rem;
+  border-radius: 999px;
   background-color: var(--btc-btn-solid);
   color: #141109;
   font-weight: 600;
   transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-  box-shadow: 0 4px 14px rgba(234, 134, 15, 0.4);
+  box-shadow: 0 4px 14px rgba(234, 134, 15, 0.32);
 }
 
 .cavos-btn-primary:hover {
   background-color: var(--btc-btn-solid-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.45);
+  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);
 }
 
 .cavos-btn-primary:active {
   transform: scale(0.98);
 }
 
-.home-shell {
-  background:
-    radial-gradient(circle at top, rgba(255, 248, 235, 0.95), rgba(246, 239, 229, 0.72) 45%, rgba(242, 232, 218, 0.92) 100%);
-}
-
-.home-ambient-orb {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(70px);
-}
-
-.home-ambient-orb--top {
-  top: -4rem;
-  left: 12%;
-  width: 16rem;
-  height: 16rem;
-  background: rgba(247, 147, 26, 0.18);
-}
-
-.home-ambient-orb--side {
-  right: -5rem;
-  top: 26%;
-  width: 18rem;
-  height: 18rem;
-  background: rgba(107, 72, 41, 0.13);
-}
-
-.home-grid-mask {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(83, 56, 31, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(83, 56, 31, 0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.34), transparent 82%);
-}
-
-.home-stat-card {
-  border: 1px solid rgba(126, 87, 52, 0.12);
-  border-radius: 1.25rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.65),
-    0 14px 30px rgba(80, 49, 20, 0.07);
-  backdrop-filter: blur(14px);
-}
-
-.home-stat-label {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(75, 52, 33, 0.48);
-}
-
-.home-stat-value {
-  margin-top: 0.55rem;
-  font-family: var(--font-romagothicbold), var(--font-geist), sans-serif;
-  font-size: clamp(1.9rem, 3vw, 2.8rem);
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  color: #1f150d;
-}
-
-.home-stat-copy {
-  margin-top: 0.5rem;
-  font-size: 0.88rem;
-  line-height: 1.5;
-  color: rgba(63, 49, 40, 0.72);
-}
-
 .cavos-btn-secondary {
-  border-radius: 0.75rem;
-  border: 1px solid rgba(10, 9, 8, 0.12);
+  border-radius: 999px;
+  border: 1px solid var(--cavos-border-strong);
   background: rgba(255, 255, 255, 0.9);
-  color: rgba(10, 9, 8, 0.55);
+  color: rgba(10, 9, 8, 0.7);
   font-weight: 600;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .cavos-btn-secondary:hover {
   background: rgba(10, 9, 8, 0.04);
   color: #0a0908;
-  border-color: rgba(10, 9, 8, 0.18);
+  border-color: rgba(10, 9, 8, 0.28);
 }
+
+/* ── Safe-area helpers ── */
+
+.mobile-safe-bottom {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+.mobile-safe-top {
+  padding-top: calc(0.5rem + env(safe-area-inset-top));
+}
+
+/* ── Game urgency feedback ── */
 
 @keyframes cavos-warn-glow {
   0%,
@@ -215,10 +188,32 @@ body {
   animation: cavos-critical-glow 0.45s ease-in-out infinite;
 }
 
-@keyframes sweep {
-  0% { transform: translateX(-100%); opacity: 0; }
-  50% { opacity: 0.5; }
-  100% { transform: translateX(100%); opacity: 0; }
+.game-bg {
+  transition: background-color 0.6s ease;
+}
+
+.game-bg--normal {
+  background-color: #fffbf5;
+}
+
+.game-bg--warn {
+  background-color: #fff3e0;
+  animation: bg-pulse-warn 1.2s ease-in-out infinite;
+}
+
+.game-bg--critical {
+  background-color: #fde8e8;
+  animation: bg-pulse-critical 0.5s ease-in-out infinite;
+}
+
+@keyframes bg-pulse-warn {
+  0%, 100% { background-color: #fff3e0; }
+  50% { background-color: #ffe0b2; }
+}
+
+@keyframes bg-pulse-critical {
+  0%, 100% { background-color: #fde8e8; }
+  50% { background-color: #fca5a5; }
 }
 
 /* ── Confetti ── */
@@ -249,36 +244,6 @@ body {
   animation-delay: var(--delay);
   opacity: 0;
   animation-fill-mode: both;
-}
-
-/* ── Game urgency backgrounds ── */
-
-.game-bg {
-  transition: background-color 0.6s ease;
-}
-
-.game-bg--normal {
-  background-color: #fffbf5;
-}
-
-.game-bg--warn {
-  background-color: #fff3e0;
-  animation: bg-pulse-warn 1.2s ease-in-out infinite;
-}
-
-.game-bg--critical {
-  background-color: #fde8e8;
-  animation: bg-pulse-critical 0.5s ease-in-out infinite;
-}
-
-@keyframes bg-pulse-warn {
-  0%, 100% { background-color: #fff3e0; }
-  50% { background-color: #ffe0b2; }
-}
-
-@keyframes bg-pulse-critical {
-  0%, 100% { background-color: #fde8e8; }
-  50% { background-color: #fca5a5; }
 }
 
 /* ── Coffee bean burst (radial from button) ── */
@@ -313,38 +278,84 @@ body {
   }
 }
 
+/* ── Coffee rain background (kept) ── */
+
+.home-ambient-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(70px);
+}
+
+.home-ambient-orb--top {
+  top: -4rem;
+  left: 12%;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(247, 147, 26, 0.18);
+}
+
+.home-ambient-orb--side {
+  right: -5rem;
+  top: 26%;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(107, 72, 41, 0.13);
+}
+
+.home-grid-mask {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(83, 56, 31, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(83, 56, 31, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.34), transparent 82%);
+}
+
 @keyframes coffee-rain-fall {
   0% {
-    transform: translate3d(0, -18vh, 0) rotate(0deg) scale(var(--bean-scale, 1));
+    transform: translate3d(0, -22vh, 0) rotate(0deg) scale(var(--bean-scale, 1));
   }
   50% {
-    transform: translate3d(calc(var(--bean-drift) * 0.45), 45vh, 0)
+    transform: translate3d(calc(var(--bean-drift) * 0.45), 58vh, 0)
       rotate(120deg) scale(var(--bean-scale, 1));
   }
   100% {
-    transform: translate3d(var(--bean-drift), 115vh, 0) rotate(240deg)
+    transform: translate3d(var(--bean-drift), 132vh, 0) rotate(240deg)
       scale(var(--bean-scale, 1));
   }
 }
 
 .coffee-rain-layer {
   position: absolute;
-  inset: -15vh 0 0;
+  inset: -20vh 0 -12vh;
   overflow: hidden;
+  z-index: 0;
+}
+
+.coffee-rain-layer--far {
+  inset: -26vh 0 -16vh;
+  opacity: 0.82;
 }
 
 .coffee-rain-bean {
   --bean-drift: 0px;
   --bean-scale: 1;
   position: absolute;
-  top: -10vh;
-  width: 26px;
-  height: 34px;
+  top: -14vh;
+  width: 34px;
+  height: 44px;
   animation-name: coffee-rain-fall;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   will-change: transform;
-  filter: drop-shadow(0 12px 18px rgba(43, 24, 12, 0.08));
+  filter: drop-shadow(0 16px 24px rgba(71, 36, 12, 0.16));
+}
+
+.coffee-rain-bean--far {
+  width: 26px;
+  height: 34px;
+  filter: drop-shadow(0 10px 16px rgba(71, 36, 12, 0.1));
 }
 
 .coffee-rain-image {
@@ -352,15 +363,22 @@ body {
   height: 100%;
   display: block;
   object-fit: contain;
-  filter: saturate(0.95) contrast(1.02);
+  filter: saturate(1.08) contrast(1.04) brightness(1.03);
 }
 
 @media (min-width: 640px) {
   .coffee-rain-bean {
-    width: 34px;
-    height: 44px;
+    width: 44px;
+    height: 58px;
+  }
+
+  .coffee-rain-bean--far {
+    width: 32px;
+    height: 42px;
   }
 }
+
+/* ── Reduced motion ── */
 
 @media (prefers-reduced-motion: reduce) {
   .coffee-rain-bean,

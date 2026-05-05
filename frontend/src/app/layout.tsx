@@ -28,7 +28,7 @@ export default function RootLayout({
       className={`${romagothicbold.variable} ${geist.variable} h-full`}
     >
       <body className="flex min-h-full flex-col antialiased">
-        <div id="app-shell" className="relative flex min-h-screen flex-col overflow-x-hidden bg-white transition-colors duration-500">
+        <div id="app-shell" className="relative isolate flex min-h-screen flex-col overflow-x-hidden bg-white/80 transition-colors duration-500">
           <CoffeeRainBackground />
           <Providers>
             <div className="relative z-10 flex flex-1 flex-col">{children}</div>

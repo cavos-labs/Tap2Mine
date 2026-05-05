@@ -27,7 +27,7 @@ export function LanguageToggle({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`inline-flex rounded-full bg-linear-to-b from-[#f4f1ec] to-[#e9e4dc] p-0.5 shadow-[inset_0_1px_1px_rgba(10,9,8,0.06)] ring-1 ring-[#d9d3c9]/80 ${className}`}
+      className={`inline-flex rounded-full bg-[var(--cavos-surface-quiet)] p-0.5 ring-1 ring-[var(--cavos-border)] ${className}`}
       role="group"
       aria-label={t("language.label")}
     >

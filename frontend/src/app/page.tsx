@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AuthModal } from "@/components/auth-modal";
@@ -11,14 +10,20 @@ import { LeaderboardPanel } from "@/components/leaderboard-panel";
 import { useI18n } from "@/context/locale-context";
 import { usePlayer } from "@/context/player-context";
 import { fetchBtcPriceUsd } from "@/lib/api";
-import { formatBtc } from "@/lib/format";
+import { formatImaginaryBtc } from "@/lib/format";
 
-const COFIBLOCKS_STORE_HREF = "https://app.cofiblocks.com/";
+function formatUsd(btc: number, priceUsd: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(btc * priceUsd);
+}
 
 export default function Home() {
   const router = useRouter();
-  const { locale, t } = useI18n();
-  const { user, login, leaderboard } = usePlayer();
+  const { t, intlLocale } = useI18n();
+  const { user, login, logout, leaderboard, highScoreTaps, history } = usePlayer();
   const [authOpen, setAuthOpen] = useState(false);
   const [btcPriceUsd, setBtcPriceUsd] = useState<number | null>(null);
 
@@ -28,59 +33,38 @@ export default function Home() {
       .catch(() => setBtcPriceUsd(null));
   }, [leaderboard]);
 
+  const topTen = useMemo(() => leaderboard.slice(0, 10), [leaderboard]);
+  const lastThree = useMemo(() => history.slice(0, 3), [history]);
+
   const onStart = () => {
-    if (user) router.push("/player");
+    if (user) router.push("/game");
     else setAuthOpen(true);
   };
 
-  const liveLabel = locale === "es" ? "Ronda relámpago" : "Lightning round";
-  const liveDetail =
-    locale === "es" ? "15 segundos. Un toque = 1 BTC imaginario." : "15 seconds. One tap = 1 imaginary BTC.";
-  const rewardLabel = locale === "es" ? "Premio real" : "Real reward";
-  const leaderboardLabel = locale === "es" ? "Top actual" : "Current top";
-  const welcomeBack = locale === "es" ? "Volver a minar" : "Back to mining";
-  const rewardCardTitle = locale === "es" ? "Cómo se gana" : "How to win";
-  const rewardCardValue = locale === "es" ? "Top 3 del ranking" : "Top 3 on the leaderboard";
-  const rewardCardCopy =
-    locale === "es"
-      ? "Las mejores rondas del tablero se llevan el cupón de café."
-      : "The best rounds on the board earn the coffee coupon.";
-  const brandCardTitle = locale === "es" ? "Marca aliada" : "Partner brand";
-  const brandCardValue = "CofiBlocks";
-  const brandCardCopy =
-    locale === "es"
-      ? "Café de especialidad costarricense con trazabilidad finca-taza."
-      : "Costa Rican specialty coffee with farm-to-cup traceability.";
-  const topValue =
-    leaderboard.length > 0 ? formatBtc(leaderboard[0].bestBtcMined, locale) : "—";
-  const topValueCopy =
-    leaderboard.length > 0
-      ? locale === "es"
-        ? `Lidera ${leaderboard[0].username}`
-        : `Led by ${leaderboard[0].username}`
-      : t("leaderboard.empty");
+  const startLabel = user ? t("home.playNow") : t("home.start");
+  const bestUsd =
+    user && highScoreTaps > 0 && btcPriceUsd != null
+      ? formatUsd(highScoreTaps, btcPriceUsd, intlLocale)
+      : null;
 
   return (
-    <div className="home-shell relative flex min-h-full flex-1 flex-col overflow-x-hidden">
-      <header className="relative z-10 px-4 py-4 sm:px-6 sm:py-5">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 rounded-full border border-white/45 bg-white/70 px-4 py-3 shadow-[0_10px_30px_rgba(54,31,12,0.08)] backdrop-blur-xl">
+    <div className="relative flex min-h-full flex-1 flex-col overflow-x-hidden">
+      <header className="mobile-safe-top relative z-10 px-3 py-3 sm:px-6 sm:py-5">
+        <div className="card mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:px-4 sm:py-3">
           <Link href="/" className="flex items-center">
-            <span className="text-lg font-semibold tracking-tight">
+            <span className="text-base font-semibold tracking-tight sm:text-lg">
               <span className="text-[#0A0908]">Tap2</span>
               <span className="text-btc-orange">Mine</span>
             </span>
           </Link>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3">
             <LanguageToggle />
             {user ? (
-              <Link
-                href="/player"
-                className="rounded-full border border-black/6 bg-white/70 px-3 py-1.5 text-sm font-medium text-[#0A0908]/70 transition-colors hover:text-[#0A0908]"
-              >
+              <span className="max-w-[8.5rem] truncate rounded-full border border-[var(--cavos-border)] bg-white px-2.5 py-1 text-xs font-medium text-[#0A0908] sm:max-w-none sm:px-3 sm:py-1.5 sm:text-sm">
                 @{user.username}
-              </Link>
+              </span>
             ) : (
-              <span className="rounded-full border border-black/6 bg-white/60 px-3 py-1.5 text-xs font-medium text-black/45">
+              <span className="rounded-full border border-[var(--cavos-border)] bg-white px-2.5 py-1 text-[11px] font-medium text-[var(--cavos-subtle)] sm:px-3 sm:py-1.5 sm:text-xs">
                 {t("common.guest")}
               </span>
             )}
@@ -88,126 +72,189 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 pb-10 sm:gap-10 sm:px-6 sm:pb-14">
-        <section className="relative overflow-hidden rounded-[2rem] border border-white/55 bg-[linear-gradient(145deg,rgba(255,249,241,0.97),rgba(246,237,224,0.88))] px-5 py-7 shadow-[0_24px_80px_rgba(69,39,15,0.14)] sm:px-8 sm:py-10 lg:px-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(247,147,26,0.2),transparent_34%),radial-gradient(circle_at_85%_18%,rgba(35,24,15,0.08),transparent_28%),linear-gradient(180deg,rgba(255,255,255,0.5),transparent)]" />
-          <div className="absolute -right-12 top-10 h-44 w-44 rounded-full bg-[rgba(247,147,26,0.14)] blur-3xl" />
-          <div className="absolute bottom-0 left-0 h-32 w-48 bg-[radial-gradient(circle_at_bottom_left,rgba(84,51,22,0.14),transparent_70%)]" />
+      <main className="mobile-safe-bottom relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-3 pb-8 sm:gap-10 sm:px-6 sm:pb-14">
+        {/* Hero */}
+        <section className="card-quiet relative overflow-hidden px-5 py-7 sm:px-10 sm:py-12">
+          <div className="relative max-w-3xl">
+            <span className="eyebrow">{t("home.eyebrow")}</span>
+            <h1 className="mt-3 text-balance font-[family:var(--font-romagothicbold)] leading-[0.92] tracking-[-0.05em] text-[#120c08]"
+                style={{ fontSize: "clamp(2.5rem, 8.4vw, 5.25rem)" }}>
+              {t("home.heroTitle")}
+            </h1>
+            <p className="mt-4 max-w-xl text-pretty text-[15px] leading-7 text-[var(--cavos-muted)] sm:text-base">
+              {t("home.heroSubtitle")}
+            </p>
 
-          <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-center">
-            <div className="max-w-2xl">
-              <h1 className="max-w-3xl text-balance font-[family:var(--font-romagothicbold)] text-5xl leading-[0.9] tracking-[-0.06em] text-[#120c08] sm:text-7xl lg:text-[5.5rem]">
-                {t("home.heroLine1")}{" "}
-                <span className="text-btc-orange drop-shadow-[0_8px_24px_rgba(247,147,26,0.2)]">
-                  {t("home.heroOrange")}
-                </span>{" "}
-                <span className="text-[#7b736d]">{t("home.heroMuted")}</span>
-              </h1>
-
-              <p className="mt-5 max-w-xl text-pretty text-base leading-7 text-[#3f3128]/72 sm:text-lg">
-                {t("home.subtitle")}
-              </p>
-
-              <div className="mt-7 flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onClick={onStart}
-                  className="cavos-btn-primary inline-flex min-h-13 items-center justify-center rounded-full px-8 py-4 text-sm sm:px-10 sm:text-base"
-                >
-                  {user ? welcomeBack : t("home.start")}
-                </button>
-              </div>
-
-              <div className="mt-8 grid gap-3 sm:grid-cols-3">
-                <div className="home-stat-card">
-                  <span className="home-stat-label">{liveLabel}</span>
-                  <p className="home-stat-value">15s</p>
-                  <p className="home-stat-copy">{liveDetail}</p>
-                </div>
-                <div className="home-stat-card">
-                  <span className="home-stat-label">{rewardLabel}</span>
-                  <p className="home-stat-value">Top 3</p>
-                  <p className="home-stat-copy">{t("home.rewardPartnerBadge")}</p>
-                </div>
-                <div className="home-stat-card">
-                  <span className="home-stat-label">{leaderboardLabel}</span>
-                  <p className="home-stat-value">{topValue}</p>
-                  <p className="home-stat-copy">{topValueCopy}</p>
-                </div>
-              </div>
+            <div className="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+              <button
+                type="button"
+                onClick={onStart}
+                className="cavos-btn-primary inline-flex min-h-[3.25rem] w-full items-center justify-center px-8 py-4 text-sm sm:w-auto sm:px-10 sm:text-base"
+              >
+                {startLabel}
+              </button>
             </div>
-
-            <aside className="relative">
-              <div className="absolute inset-x-8 -top-6 h-24 rounded-full bg-[rgba(247,147,26,0.24)] blur-3xl" />
-              <div className="relative overflow-hidden rounded-[1.75rem] border border-[#eadac6] bg-[linear-gradient(180deg,rgba(43,25,12,0.98),rgba(24,15,9,0.94))] p-5 text-white shadow-[0_26px_70px_rgba(35,20,10,0.34)] sm:p-6">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(247,147,26,0.28),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.07),transparent_35%)]" />
-                <div className="relative">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <span className="inline-flex rounded-full border border-white/10 bg-white/8 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#f9d3a4]">
-                        {t("home.rewardPartnerBadge")}
-                      </span>
-                      <h2 className="mt-4 text-2xl font-semibold tracking-tight text-white sm:text-[2rem]">
-                        CofiBlocks
-                      </h2>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/8 p-2">
-                      <Image
-                        src="/partners/cofiblocks-v2.png"
-                        alt={t("footer.altCofiblocks")}
-                        width={120}
-                        height={120}
-                        className="h-14 w-auto object-contain sm:h-16"
-                        sizes="(max-width:640px) 120px, 140px"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-                        {rewardCardTitle}
-                      </p>
-                      <p className="mt-2 text-lg font-semibold text-[#ffe1b8]">
-                        {rewardCardValue}
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-white/68">
-                        {rewardCardCopy}
-                      </p>
-                    </div>
-                    <div className="rounded-2xl border border-white/10 bg-white/6 p-4">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
-                        {brandCardTitle}
-                      </p>
-                      <p className="mt-2 text-lg font-semibold text-white">
-                        {brandCardValue}
-                      </p>
-                      <p className="mt-2 text-sm leading-6 text-white/68">
-                        {brandCardCopy}
-                      </p>
-                    </div>
-                  </div>
-
-                  <a
-                    href={COFIBLOCKS_STORE_HREF}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#f3c58a]/40 bg-[#f7931a] px-5 py-3 text-sm font-semibold text-[#1f140a] transition-transform hover:-translate-y-0.5"
-                  >
-                    {t("home.rewardStoreLink")}
-                    <span aria-hidden>↗</span>
-                  </a>
-                </div>
-              </div>
-            </aside>
           </div>
         </section>
 
-        <LeaderboardPanel
-          rows={leaderboard}
-          highlightUsername={user?.username}
-          priceUsd={btcPriceUsd}
-        />
+        {/* Two-column layout from lg */}
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-8">
+          {/* Left column */}
+          <div className="flex flex-col gap-6">
+            {/* How to play */}
+            <section className="card relative overflow-hidden p-5 sm:p-7">
+              <span className="eyebrow">{t("home.howTo.eyebrow")}</span>
+              <h2 className="mt-2.5 text-2xl font-semibold tracking-tight text-[#120c08] sm:text-[1.75rem]">
+                {t("home.howTo.title")}
+              </h2>
+              <ol className="mt-5 grid gap-3 sm:grid-cols-3 sm:gap-4">
+                {[1, 2, 3].map((n) => (
+                  <li
+                    key={n}
+                    className="flex items-start gap-3 rounded-[1rem] border border-[var(--cavos-border)] bg-white p-4 sm:flex-col sm:gap-3"
+                  >
+                    <span className="step-num shrink-0">{n}</span>
+                    <div>
+                      <h3 className="text-sm font-semibold text-[#120c08] sm:text-base">
+                        {t(`home.howTo.step${n}Title`)}
+                      </h3>
+                      <p className="mt-1 text-[13px] leading-5 text-[var(--cavos-muted)] sm:text-sm">
+                        {t(`home.howTo.step${n}Body`)}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-4 rounded-[1rem] border border-[var(--cavos-border)] bg-[var(--btc-orange-soft)] px-4 py-3">
+                <p className="text-sm text-[#7a5431]">{t("home.prizeNotice")}</p>
+                <Link
+                  href="https://www.ticoblockchain.cr/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 inline-flex text-sm font-semibold text-[#b45309] underline underline-offset-2"
+                >
+                  {t("home.eventLinkLabel")}
+                </Link>
+              </div>
+            </section>
+
+            {/* Your best (only if logged in) */}
+            {user && (
+              <section className="card relative overflow-hidden p-5 sm:p-7">
+                <span className="eyebrow">{t("home.yourBest.eyebrow")}</span>
+                <h2 className="mt-2.5 text-2xl font-semibold tracking-tight text-[#120c08] sm:text-[1.75rem]">
+                  {t("home.yourBest.title")}
+                </h2>
+                <p className="mt-1 text-sm text-[var(--cavos-muted)]">
+                  {t("home.yourBest.caption")}
+                </p>
+
+                {highScoreTaps > 0 ? (
+                  <div className="mt-5 flex flex-wrap items-end gap-x-6 gap-y-3">
+                    <p
+                      className="font-[family:var(--font-romagothicbold)] leading-none tracking-[-0.05em] text-[#120c08]"
+                      style={{ fontSize: "clamp(2.6rem, 8vw, 4.5rem)" }}
+                    >
+                      {formatImaginaryBtc(highScoreTaps, intlLocale)}
+                    </p>
+                    {bestUsd && (
+                      <p className="text-xl font-extrabold tabular-nums text-[#059669] sm:text-2xl">
+                        ≈ {bestUsd}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-5 text-sm text-[var(--cavos-muted)]">
+                    {t("home.yourBest.empty")}
+                  </p>
+                )}
+
+                <p className="mt-3 text-[13px] tabular-nums text-[var(--cavos-subtle)]">
+                  {highScoreTaps.toLocaleString(intlLocale)} {t("common.taps")}
+                </p>
+              </section>
+            )}
+
+            {/* Recent runs (only if logged in) */}
+            {user && (
+              <section className="card relative overflow-hidden p-5 sm:p-7">
+                <div className="flex items-baseline justify-between gap-3">
+                  <div>
+                    <span className="eyebrow">{t("home.recent.eyebrow")}</span>
+                    <h2 className="mt-2.5 text-xl font-semibold tracking-tight text-[#120c08] sm:text-2xl">
+                      {t("home.recent.title")}
+                    </h2>
+                  </div>
+                </div>
+
+                {lastThree.length === 0 ? (
+                  <p className="mt-5 text-sm text-[var(--cavos-muted)]">
+                    {t("home.recent.empty")}
+                  </p>
+                ) : (
+                  <ul className="mt-5 grid gap-2.5">
+                    {lastThree.map((run, i) => (
+                      <li
+                        key={run.id}
+                        className="flex items-center justify-between gap-3 rounded-[1rem] border border-[var(--cavos-border)] bg-white px-4 py-3"
+                      >
+                        <div className="flex min-w-0 items-center gap-3">
+                          <span className="step-num shrink-0">{i + 1}</span>
+                          <div className="min-w-0">
+                            <p className="truncate text-[13px] font-semibold tabular-nums text-[#120c08] sm:text-sm">
+                              {new Date(run.playedAt).toLocaleString(intlLocale, {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                              })}
+                            </p>
+                            <p className="text-[12px] text-[var(--cavos-subtle)] sm:text-[13px]">
+                              {formatImaginaryBtc(run.btcMined, intlLocale)}
+                              {btcPriceUsd != null && (
+                                <span className="ml-1.5 text-[#059669]">
+                                  · ≈ {formatUsd(run.btcMined, btcPriceUsd, intlLocale)}
+                                </span>
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                        <p className="shrink-0 text-lg font-semibold tabular-nums tracking-tight text-[#120c08] sm:text-xl">
+                          {run.taps.toLocaleString(intlLocale)}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <Link
+                    href="/game"
+                    className="cavos-btn-primary inline-flex min-h-[3rem] items-center justify-center px-6 py-3 text-sm sm:w-auto"
+                  >
+                    {t("home.playNow")}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                    }}
+                    className="cavos-btn-secondary inline-flex min-h-[3rem] items-center justify-center px-5 py-3 text-sm sm:w-auto"
+                  >
+                    {t("home.signOut")}
+                  </button>
+                </div>
+              </section>
+            )}
+          </div>
+
+          {/* Right column: leaderboard */}
+          <aside className="lg:sticky lg:top-6">
+            <LeaderboardPanel
+              rows={topTen}
+              highlightUsername={user?.username}
+              priceUsd={btcPriceUsd}
+            />
+          </aside>
+        </div>
       </main>
 
       <AuthModal
@@ -217,7 +264,7 @@ export default function Home() {
           flushSync(() => {
             login(username);
           });
-          router.push("/player");
+          router.push("/game");
         }}
       />
     </div>
