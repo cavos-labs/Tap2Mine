@@ -216,7 +216,7 @@ export function GameSession() {
   const timerColor = warn5 ? "#dc2626" : warn10 ? "#ea580c" : "#0A0908";
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col gap-6 px-2 sm:gap-8 sm:px-0">
+    <div className="mx-auto flex min-h-[calc(100svh-5.5rem)] w-full max-w-lg flex-col justify-between gap-4 px-2 pb-2 sm:min-h-0 sm:gap-8 sm:px-0">
       {/* ── Rules popup ── */}
       {phase === "rules" && (
         <div
@@ -224,20 +224,22 @@ export function GameSession() {
           role="dialog"
           aria-modal="true"
         >
-          <div className="w-full max-w-xs rounded-3xl bg-white px-6 py-8 text-center shadow-2xl sm:max-w-sm sm:px-8 sm:py-10">
-            <p className="text-4xl leading-none">👆</p>
-            <h2 className="mt-3 text-xl font-extrabold text-[#0A0908] sm:text-2xl">
+          <div className="card w-full max-w-sm px-6 py-8 text-center sm:max-w-sm sm:px-8 sm:py-10">
+            <p className="text-4xl leading-none" aria-hidden>
+              👆
+            </p>
+            <h2 className="mt-4 text-xl font-semibold tracking-tight text-[#120c08] sm:text-2xl">
               {t("game.rulesTitle")}
             </h2>
-            <p className="mt-5 text-base font-medium leading-snug text-black/70 sm:text-lg">
+            <p className="mt-5 text-[15px] leading-6 text-[var(--cavos-muted)] sm:text-base">
               {t("game.rule1")}
             </p>
-            <p className="mt-3 text-sm leading-snug text-black/50 sm:text-base">
+            <p className="mt-3 text-[13px] leading-5 text-[var(--cavos-subtle)] sm:text-sm">
               {t("game.rule2")}
             </p>
             <button
               type="button"
-              className="cavos-btn-primary mt-8 w-full py-4 text-base font-bold sm:text-lg"
+              className="cavos-btn-primary mt-7 w-full py-4 text-base font-semibold sm:text-lg"
               onClick={startPlaying}
             >
               {t("game.start")}
@@ -248,53 +250,54 @@ export function GameSession() {
 
       {/* ── Playing ── */}
       {phase === "playing" && (
-        <div className="relative flex flex-col items-center gap-2 sm:gap-4">
+        <div className="relative flex flex-1 flex-col items-center justify-between gap-4 py-2 sm:gap-4">
           {/* Timer */}
-          <div
-            className="text-8xl font-black tabular-nums tracking-tighter sm:text-9xl"
-            style={{ color: timerColor, transition: "color 0.4s ease" }}
-          >
-            {leftSec}
-          </div>
-
-          {warn10 && (
-            <p
-              className={`text-base font-extrabold uppercase tracking-widest sm:text-lg ${
-                warn5 ? "text-red-600" : "text-orange-600"
-              }`}
+          <div className="flex w-full flex-col items-center gap-3">
+            <div
+              className="text-7xl font-black tabular-nums tracking-tighter sm:text-9xl"
+              style={{ color: timerColor, transition: "color 0.4s ease" }}
             >
-              {warn5 ? t("game.warn5") : t("game.warn10")}
-            </p>
-          )}
+              {leftSec}
+            </div>
 
-          {/* Live BTC + USD */}
-          <div className="flex flex-col items-center">
-            <p
-              className="text-4xl font-black tabular-nums tracking-tight sm:text-5xl"
-              style={{ color: "#b45309" }}
-            >
-              {formatImaginaryBtc(liveBtcMined, intlLocale)}
-            </p>
-            {spotPriceLoading && spotPriceUsd == null && (
-              <p className="text-[10px] text-black/35">{t("game.loadingPrice")}</p>
-            )}
-            {!spotPriceLoading && spotPriceUsd == null && spotPriceError && (
-              <p className="text-[10px] text-black/35">{t("game.usdUnavailable")}</p>
-            )}
-            {liveUsdMined != null && (
+            {warn10 && (
               <p
-                className="text-4xl font-black tabular-nums tracking-tight drop-shadow-sm sm:text-5xl"
-                style={{ color: "#059669" }}
-                aria-live="polite"
-                aria-atomic="true"
+                className={`text-center text-xs font-extrabold uppercase tracking-[0.25em] sm:text-lg ${
+                  warn5 ? "text-red-600" : "text-orange-600"
+                }`}
               >
-                ≈ {formatUsdApprox(liveUsdMined, { numberLocale: intlLocale })}
+                {warn5 ? t("game.warn5") : t("game.warn10")}
               </p>
             )}
+
+            <div className="w-full rounded-[1.6rem] border border-white/60 bg-white/74 px-4 py-3 text-center shadow-[0_18px_40px_rgba(69,39,15,0.08)] backdrop-blur-md">
+              <p
+                className="text-3xl font-black tabular-nums tracking-tight sm:text-5xl"
+                style={{ color: "#b45309" }}
+              >
+                {formatImaginaryBtc(liveBtcMined, intlLocale)}
+              </p>
+              {spotPriceLoading && spotPriceUsd == null && (
+                <p className="mt-1 text-[10px] text-black/35">{t("game.loadingPrice")}</p>
+              )}
+              {!spotPriceLoading && spotPriceUsd == null && spotPriceError && (
+                <p className="mt-1 text-[10px] text-black/35">{t("game.usdUnavailable")}</p>
+              )}
+              {liveUsdMined != null && (
+                <p
+                  className="mt-1 text-3xl font-black tabular-nums tracking-tight drop-shadow-sm sm:text-5xl"
+                  style={{ color: "#059669" }}
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  ≈ {formatUsdApprox(liveUsdMined, { numberLocale: intlLocale })}
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Tap button with bean particles */}
-          <div className="relative mt-1 flex items-center justify-center sm:mt-3">
+          <div className="relative flex flex-1 items-center justify-center py-2 sm:mt-3 sm:flex-none">
             {beans.map((b) => (
               <Image
                 key={b.id}
@@ -324,8 +327,8 @@ export function GameSession() {
               onClick={onTap}
               className="relative z-20 flex touch-manipulation select-none items-center justify-center rounded-full transition-transform active:scale-90"
               style={{
-                width: "min(13rem, 75vw)",
-                height: "min(13rem, 75vw)",
+                width: "min(16rem, 82vw)",
+                height: "min(16rem, 82vw)",
                 background: warn5
                   ? "radial-gradient(circle, #fef2f2 0%, #fecaca 100%)"
                   : warn10
@@ -354,7 +357,7 @@ export function GameSession() {
                 priority
               />
               <span
-                className="absolute bottom-[14%] text-[11px] font-bold tabular-nums sm:text-xs"
+                className="absolute bottom-[14%] text-xs font-bold tabular-nums sm:text-xs"
                 style={{
                   color: warn5 ? "#991b1b" : warn10 ? "#9a3412" : "#92400e",
                 }}
@@ -387,33 +390,32 @@ export function GameSession() {
       {/* ── Done (popup overlay like rules) ── */}
       {phase === "done" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-xs rounded-3xl bg-white px-6 py-10 text-center shadow-2xl sm:max-w-sm sm:px-8 sm:py-12">
-            <p className="text-3xl leading-none">🎉</p>
-            <h2 className="mt-4 text-lg font-bold text-[#0A0908] sm:text-xl">
+          <div className="card w-full max-w-sm px-6 py-9 text-center sm:max-w-sm sm:px-8 sm:py-11">
+            <p className="text-3xl leading-none" aria-hidden>
+              🎉
+            </p>
+            <h2 className="mt-3 text-base font-semibold tracking-tight text-[var(--cavos-muted)] sm:text-lg">
               {t("game.roundOver")}
             </h2>
 
-            <p className="mt-6 text-4xl font-black tabular-nums text-[#0A0908] sm:text-5xl">
+            <p
+              className="mt-6 font-[family:var(--font-romagothicbold)] leading-none tracking-[-0.05em] text-[#120c08]"
+              style={{ fontSize: "clamp(3rem, 12vw, 4.5rem)" }}
+            >
               {finalTaps.toLocaleString(intlLocale)}
             </p>
-            <p className="mt-1.5 text-xs font-semibold uppercase tracking-widest text-black/35">
+            <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cavos-subtle)]">
               {t("common.taps")}
             </p>
 
-            <div className="mx-auto mt-6 w-fit rounded-xl px-5 py-2.5" style={{ backgroundColor: "#fef9ec" }}>
-              <p
-                className="text-base font-bold tabular-nums sm:text-lg"
-                style={{ color: "#b45309" }}
-              >
+            <div className="mx-auto mt-6 w-fit rounded-full bg-[var(--btc-orange-soft)] px-4 py-2">
+              <p className="text-base font-bold tabular-nums text-[#b45309] sm:text-lg">
                 {formatImaginaryBtc(btcMined, intlLocale)}
               </p>
             </div>
 
             {priceUsd != null && usdApprox != null && (
-              <p
-                className="mt-5 text-xl font-extrabold tabular-nums sm:text-2xl"
-                style={{ color: "#059669" }}
-              >
+              <p className="mt-4 text-xl font-extrabold tabular-nums text-[#059669] sm:text-2xl">
                 ≈{" "}
                 {usdApprox.toLocaleString(intlLocale, {
                   style: "currency",
@@ -424,13 +426,15 @@ export function GameSession() {
               </p>
             )}
             {priceUnavailable && (
-              <p className="mt-3 text-sm text-black/35">{t("game.priceError")}</p>
+              <p className="mt-3 text-sm text-[var(--cavos-subtle)]">
+                {t("game.priceError")}
+              </p>
             )}
 
-            <div className="mt-8 flex flex-col gap-3">
+            <div className="mt-8 flex flex-col gap-2.5">
               <button
                 type="button"
-                className="cavos-btn-primary w-full py-4 text-base font-bold sm:text-lg"
+                className="cavos-btn-primary w-full py-4 text-base font-semibold sm:text-lg"
                 onClick={() => {
                   setPriceUsd(null);
                   setPriceUnavailable(false);
@@ -442,8 +446,8 @@ export function GameSession() {
               </button>
               <button
                 type="button"
-                className="w-full py-3 text-sm font-semibold text-black/45 transition-colors hover:text-[#0A0908]"
-                onClick={() => router.push("/player")}
+                className="w-full py-3 text-sm font-semibold text-[var(--cavos-subtle)] transition-colors hover:text-[#0A0908]"
+                onClick={() => router.push("/")}
               >
                 {t("game.backToProfile")}
               </button>
