@@ -1,6 +1,6 @@
 # Tap2Mine — Frontend
 
-Standalone Next.js App Router app for Tap2Mine: home with **Start** and leaderboard, mock auth modal, player profile (`/player`), and game flow (`/game`). It does not share a root `package.json` with the backend—run everything from this directory.
+Standalone Next.js App Router app for Tap2Mine: home with **Start** and leaderboard, mock auth modal, player profile (`/player`), and game flow (`/game`). Run everything from this directory (`Tap2Mine/` has no root `package.json`).
 
 ## Setup
 
@@ -9,13 +9,7 @@ npm install
 npm run dev
 ```
 
-Runs at [http://localhost:3000](http://localhost:3000). Point the app at the API with `NEXT_PUBLIC_API_URL` (see `.env.example`).
-
-## Environment
-
-| Variable | Description |
-|----------|-------------|
-| `NEXT_PUBLIC_API_URL` | Base URL of the Tap2Mine backend (default `http://localhost:3001`). |
+Runs at [http://localhost:3000](http://localhost:3000). No backend is required for the BTC spot price; the app fetches it in the browser from public price APIs.
 
 ## Stack
 

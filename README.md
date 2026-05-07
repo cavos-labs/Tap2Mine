@@ -2,30 +2,17 @@
 
 A 15-second tap game (1 imaginary BTC per tap), a **username**-based leaderboard, and Bitcoin-inspired UI.
 
-## Two separate Next.js apps
-
-There is **no root `package.json`** and **no npm workspaces**. `frontend/` and `backend/` are fully independent: each has its own dependencies, lockfile, and dev server. Install and run them from their own folders (see below).
-
-- **`frontend/`** — App Router UI (dashboard, mock auth, player hub, game). See [frontend/README.md](frontend/README.md).
-- **`backend/`** — Minimal API (`GET /api/btc-price`). See [backend/README.md](backend/README.md).
+There is **no root `package.json`**: the app lives entirely in **`frontend/`** (Next.js App Router). Install and run from that folder.
 
 ## Quick start
 
-1. **API** (port `3001`):
+```bash
+cd frontend && npm install && npm run dev
+```
 
-   ```bash
-   cd backend && npm install && npm run dev
-   ```
+Open [http://localhost:3000](http://localhost:3000). The BTC spot price is fetched in the browser from public price APIs (no separate backend).
 
-2. **Web** (port `3000`):
-
-   ```bash
-   cd frontend && npm install && npm run dev
-   ```
-
-3. Optional: copy `frontend/.env.example` to `frontend/.env.local` if the API is not at `http://localhost:3001`.
-
-Open [http://localhost:3000](http://localhost:3000).
+Details: [frontend/README.md](frontend/README.md).
 
 ## Roadmap
 
