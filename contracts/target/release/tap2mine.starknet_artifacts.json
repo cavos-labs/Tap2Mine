@@ -1,0 +1,1 @@
+{"version":1,"contracts":[{"id":"dij8l0218kkvg","package_name":"tap2mine","contract_name":"Tap2Mine","module_path":"tap2mine::tap2mine::Tap2Mine","artifacts":{"sierra":"tap2mine_Tap2Mine.contract_class.json","casm":"tap2mine_Tap2Mine.compiled_contract_class.json"}}]}

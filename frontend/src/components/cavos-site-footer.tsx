@@ -66,7 +66,7 @@ export function CavosSiteFooter() {
                   href={partner.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex h-12 w-full items-center justify-center px-2 transition-transform duration-300 hover:-translate-y-0.5 sm:h-16 sm:px-3"
+                  className="group flex h-12 w-full items-center justify-center rounded-[0.85rem] border border-[var(--cavos-border)] bg-[rgba(255,248,234,0.82)] px-2 transition-transform duration-300 hover:-translate-y-0.5 sm:h-16 sm:px-3"
                 >
                   <Image
                     src={partner.src}

@@ -1,21 +1,28 @@
 @import "tailwindcss";
+@source "../";
+@source not "../../.next";
+@source not "../../node_modules";
 
 :root {
   --btc-orange: #f7931a;
-  --btc-gold: #f5b041;
-  --btc-btn-solid: #ea860f;
-  --btc-btn-solid-hover: #d97706;
-  --btc-orange-soft: rgba(247, 147, 26, 0.08);
+  --btc-gold: #ffc857;
+  --btc-btn-solid: #f7931a;
+  --btc-btn-solid-hover: #ffad2f;
+  --btc-orange-soft: rgba(247, 147, 26, 0.14);
 
-  --cavos-bg: #ffffff;
-  --cavos-fg: #0a0908;
-  --cavos-muted: rgba(10, 9, 8, 0.55);
-  --cavos-subtle: rgba(10, 9, 8, 0.42);
-  --cavos-border: rgba(70, 45, 22, 0.12);
-  --cavos-border-strong: rgba(70, 45, 22, 0.2);
-  --cavos-surface: #ffffff;
-  --cavos-surface-quiet: #fbf6ee;
-  --cavos-surface-tint: rgba(255, 251, 245, 0.78);
+  --cavos-bg: #120b07;
+  --cavos-fg: #fff8ea;
+  --cavos-ink: #1a0f09;
+  --cavos-muted: rgba(255, 248, 234, 0.68);
+  --cavos-subtle: rgba(255, 248, 234, 0.48);
+  --cavos-border: rgba(255, 200, 87, 0.2);
+  --cavos-border-strong: rgba(255, 200, 87, 0.36);
+  --cavos-surface: rgba(28, 16, 9, 0.86);
+  --cavos-surface-quiet: rgba(255, 248, 234, 0.08);
+  --cavos-surface-tint: rgba(38, 21, 11, 0.82);
+  --cavos-cream: #fff8ea;
+  --cavos-coffee: #3a1f10;
+  --cavos-green: #25d07d;
 }
 
 @theme inline {
@@ -39,12 +46,30 @@ body {
   color: var(--cavos-fg);
   font-family: var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f6efe5;
-  background-image: linear-gradient(180deg, #fffdf9 0%, #f6efe5 100%);
+  background-color: var(--cavos-bg);
+  background-image:
+    linear-gradient(180deg, rgba(255, 154, 28, 0.16) 0%, transparent 34%),
+    radial-gradient(circle at 16% 0%, rgba(247, 147, 26, 0.28), transparent 30rem),
+    radial-gradient(circle at 86% 18%, rgba(85, 47, 22, 0.64), transparent 24rem),
+    linear-gradient(180deg, #170d08 0%, #0d0806 100%);
   text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  background-image:
+    linear-gradient(rgba(255, 248, 234, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 248, 234, 0.12) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent 76%);
 }
 
 ::-webkit-scrollbar {
@@ -52,10 +77,10 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #fff8f0;
+  background: #130b07;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(247, 147, 26, 0.45);
+  background: rgba(247, 147, 26, 0.58);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -67,15 +92,17 @@ body {
 .card {
   background: var(--cavos-surface);
   border: 1px solid var(--cavos-border);
-  border-radius: 1.25rem;
-  box-shadow: 0 1px 0 rgba(70, 45, 22, 0.04);
+  border-radius: 0.85rem;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+  color: var(--cavos-fg);
 }
 
 .card-quiet {
   background: var(--cavos-surface-tint);
   border: 1px solid var(--cavos-border);
-  border-radius: 1.25rem;
-  backdrop-filter: blur(8px);
+  border-radius: 0.9rem;
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 248, 234, 0.08);
 }
 
 .eyebrow {
@@ -83,9 +110,9 @@ body {
   align-items: center;
   font-size: 0.625rem;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #7a5431;
+  color: var(--btc-gold);
 }
 
 .divider {
@@ -101,28 +128,33 @@ body {
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 999px;
-  background: rgba(247, 147, 26, 0.1);
-  color: #92400e;
+  background: rgba(247, 147, 26, 0.18);
+  color: var(--btc-gold);
   font-family: var(--font-romagothicbold), var(--font-geist), sans-serif;
   font-size: 0.95rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
+  border: 1px solid rgba(255, 200, 87, 0.25);
 }
 
 /* ── Buttons ── */
 
 .cavos-btn-primary {
-  border-radius: 999px;
-  background-color: var(--btc-btn-solid);
-  color: #141109;
-  font-weight: 600;
+  min-height: 44px;
+  border-radius: 0.85rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 42%),
+    linear-gradient(135deg, var(--btc-btn-solid), var(--btc-gold));
+  color: #140b07;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-  box-shadow: 0 4px 14px rgba(234, 134, 15, 0.32);
+  box-shadow: 0 10px 24px rgba(247, 147, 26, 0.34), inset 0 -2px 0 rgba(55, 28, 10, 0.18);
 }
 
 .cavos-btn-primary:hover {
-  background-color: var(--btc-btn-solid-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);
+  box-shadow: 0 14px 30px rgba(247, 147, 26, 0.44), inset 0 -2px 0 rgba(55, 28, 10, 0.18);
 }
 
 .cavos-btn-primary:active {
@@ -130,18 +162,110 @@ body {
 }
 
 .cavos-btn-secondary {
-  border-radius: 999px;
+  min-height: 44px;
+  border-radius: 0.85rem;
   border: 1px solid var(--cavos-border-strong);
-  background: rgba(255, 255, 255, 0.9);
-  color: rgba(10, 9, 8, 0.7);
+  background: rgba(255, 248, 234, 0.08);
+  color: var(--cavos-muted);
   font-weight: 600;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .cavos-btn-secondary:hover {
-  background: rgba(10, 9, 8, 0.04);
-  color: #0a0908;
-  border-color: rgba(10, 9, 8, 0.28);
+  background: rgba(255, 248, 234, 0.12);
+  color: var(--cavos-fg);
+  border-color: var(--cavos-border-strong);
+}
+
+.arcade-panel {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  border: 1px solid var(--cavos-border);
+  border-radius: 0.95rem;
+  background:
+    linear-gradient(135deg, rgba(255, 248, 234, 0.1), transparent 44%),
+    rgba(24, 13, 8, 0.86);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+.arcade-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 200, 87, 0.18) 1px, transparent 1px),
+    linear-gradient(rgba(255, 200, 87, 0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: 0.18;
+  mask-image: linear-gradient(135deg, rgba(0, 0, 0, 0.8), transparent 58%);
+}
+
+.arcade-chip {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--cavos-border);
+  border-radius: 999px;
+  background: rgba(255, 248, 234, 0.08);
+  color: var(--cavos-muted);
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.tap-card {
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 200, 87, 0.26);
+  border-radius: 0.85rem;
+  background: rgba(255, 248, 234, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 248, 234, 0.08);
+}
+
+.bg-cavos-shell {
+  background-color: var(--cavos-bg);
+}
+
+.bg-btc-soft {
+  background-color: var(--btc-orange-soft);
+}
+
+.bg-btc-gold {
+  background-color: var(--btc-gold);
+}
+
+.bg-cavos-green {
+  background-color: var(--cavos-green);
+}
+
+.bg-cavos-subtle {
+  background-color: var(--cavos-subtle);
+}
+
+.bg-btc-solid {
+  background-color: var(--btc-btn-solid);
+}
+
+.tap-pop {
+  animation: tap-pop 0.22s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+@keyframes tap-pop {
+  0% { transform: scale(0.98); }
+  70% { transform: scale(1.025); }
+  100% { transform: scale(1); }
+}
+
+@keyframes panel-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.panel-rise {
+  animation: panel-rise 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* ── Safe-area helpers ── */
@@ -193,27 +317,27 @@ body {
 }
 
 .game-bg--normal {
-  background-color: #fffbf5;
+  background-color: #120b07;
 }
 
 .game-bg--warn {
-  background-color: #fff3e0;
+  background-color: #291406;
   animation: bg-pulse-warn 1.2s ease-in-out infinite;
 }
 
 .game-bg--critical {
-  background-color: #fde8e8;
+  background-color: #2d0706;
   animation: bg-pulse-critical 0.5s ease-in-out infinite;
 }
 
 @keyframes bg-pulse-warn {
-  0%, 100% { background-color: #fff3e0; }
-  50% { background-color: #ffe0b2; }
+  0%, 100% { background-color: #291406; }
+  50% { background-color: #3b1d08; }
 }
 
 @keyframes bg-pulse-critical {
-  0%, 100% { background-color: #fde8e8; }
-  50% { background-color: #fca5a5; }
+  0%, 100% { background-color: #2d0706; }
+  50% { background-color: #4a0908; }
 }
 
 /* ── Confetti ── */
@@ -269,6 +393,15 @@ body {
   height: 28px;
   animation: bean-burst 0.65s ease-out forwards;
   z-index: 30;
+}
+
+.result-sheet {
+  animation: sheet-up 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes sheet-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @media (min-width: 640px) {
@@ -387,7 +520,10 @@ body {
   .cavos-pulse-warn,
   .cavos-pulse-critical,
   .game-bg--warn,
-  .game-bg--critical {
+  .game-bg--critical,
+  .panel-rise,
+  .tap-pop,
+  .result-sheet {
     animation: none !important;
   }
 }

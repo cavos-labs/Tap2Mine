@@ -63,7 +63,7 @@ function setShellBg(color: string | null) {
 export function GameSession() {
   const router = useRouter();
   const { t, intlLocale } = useI18n();
-  const { recordRound } = usePlayer();
+  const { recordRound, user } = usePlayer();
   const [phase, setPhase] = useState<Phase>("rules");
   const [leftMs, setLeftMs] = useState(GAME_DURATION_MS);
   const tapsRef = useRef(0);
@@ -77,6 +77,8 @@ export function GameSession() {
   const [spotPriceError, setSpotPriceError] = useState(false);
   const [beans, setBeans] = useState<Bean[]>([]);
   const [confetti, setConfetti] = useState<ConfettiPiece[]>([]);
+  const [submitState, setSubmitState] = useState<"idle" | "submitting" | "submitted" | "error">("idle");
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -107,7 +109,7 @@ export function GameSession() {
   const warn5 = phase === "playing" && leftMs <= PHASE_LAST_5_MS;
 
   useEffect(() => {
-    const isPopup = phase === "rules" || phase === "done";
+    const isPopup = phase === "done";
     document.body.style.overflow = isPopup ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [phase]);
@@ -118,11 +120,11 @@ export function GameSession() {
       return;
     }
     if (warn5) {
-      setShellBg("#fde8e8");
+      setShellBg("#2d0706");
     } else if (warn10) {
-      setShellBg("#fff3e0");
+      setShellBg("#291406");
     } else {
-      setShellBg("#fffbf5");
+      setShellBg("#120b07");
     }
     return () => setShellBg(null);
   }, [phase, warn5, warn10]);
@@ -131,7 +133,16 @@ export function GameSession() {
     const taps = tapsRef.current;
     setFinalTaps(taps);
     const btcMined = taps * BTC_PER_TAP;
-    recordRound({ taps, btcMined });
+    setSubmitState("submitting");
+    setTxHash(null);
+    recordRound({ taps, btcMined })
+      .then((hash) => {
+        setTxHash(hash);
+        setSubmitState("submitted");
+      })
+      .catch(() => {
+        setSubmitState("error");
+      });
     setPhase("done");
     setConfetti(generateConfetti(60));
     setTimeout(() => setConfetti([]), 4000);
@@ -170,6 +181,8 @@ export function GameSession() {
     setTapTick(0);
     setLeftMs(GAME_DURATION_MS);
     setBeans([]);
+    setSubmitState("idle");
+    setTxHash(null);
     setPhase("playing");
     fetchBtcPriceUsd()
       .then((r) => {
@@ -213,33 +226,52 @@ export function GameSession() {
       ? liveBtcMined * spotPriceUsd
       : null;
 
-  const timerColor = warn5 ? "#dc2626" : warn10 ? "#ea580c" : "#0A0908";
+  const timerColor = warn5 ? "#ff6b5f" : warn10 ? "#ffad2f" : "var(--cavos-cream)";
 
   return (
-    <div className="mx-auto flex min-h-[calc(100svh-5.5rem)] w-full max-w-lg flex-col justify-between gap-4 px-2 pb-2 sm:min-h-0 sm:gap-8 sm:px-0">
-      {/* ── Rules popup ── */}
+    <div className="mx-auto flex min-h-[calc(100svh-5rem)] w-full max-w-lg flex-col justify-between gap-3 px-1 pb-1 sm:min-h-[42rem] sm:gap-6 sm:px-0">
+      {/* ── Pre-game ── */}
       {phase === "rules" && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="card w-full max-w-sm px-6 py-8 text-center sm:max-w-sm sm:px-8 sm:py-10">
-            <p className="text-4xl leading-none" aria-hidden>
-              👆
+        <div className="flex flex-1 items-center py-2">
+          <div className="arcade-panel panel-rise w-full px-5 py-6 text-center sm:px-7 sm:py-8">
+            <div className="bg-btc-soft relative mx-auto flex h-24 w-24 items-center justify-center rounded-[1rem] border border-[var(--cavos-border-strong)] shadow-[0_16px_36px_rgba(247,147,26,0.18)]">
+              <Image
+                src="/partners/cafe.png"
+                alt=""
+                width={58}
+                height={58}
+                className="h-14 w-14 object-contain"
+                priority
+              />
+            </div>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--cavos-subtle)]">
+              {user ? `@${user.username}` : t("game.readyPlayer")}
             </p>
-            <h2 className="mt-4 text-xl font-semibold tracking-tight text-[#120c08] sm:text-2xl">
-              {t("game.rulesTitle")}
+            <h2 className="mt-2 text-3xl font-extrabold text-[var(--cavos-cream)] sm:text-4xl">
+              {t("game.preTitle")}
             </h2>
-            <p className="mt-5 text-[15px] leading-6 text-[var(--cavos-muted)] sm:text-base">
+            <p className="mx-auto mt-3 max-w-sm text-[15px] leading-6 text-[var(--cavos-muted)] sm:text-base">
               {t("game.rule1")}
             </p>
-            <p className="mt-3 text-[13px] leading-5 text-[var(--cavos-subtle)] sm:text-sm">
-              {t("game.rule2")}
-            </p>
+
+            <div className="mt-5 grid gap-2 text-left">
+              <div className="tap-card flex items-start gap-3 px-4 py-3">
+                <span className="step-num shrink-0">1</span>
+                <p className="text-sm leading-5 text-[var(--cavos-muted)]">
+                  {t("game.preStep1")}
+                </p>
+              </div>
+              <div className="tap-card flex items-start gap-3 px-4 py-3">
+                <span className="step-num shrink-0">2</span>
+                <p className="text-sm leading-5 text-[var(--cavos-muted)]">
+                  {t("game.preStep2")}
+                </p>
+              </div>
+            </div>
+
             <button
               type="button"
-              className="cavos-btn-primary mt-7 w-full py-4 text-base font-semibold sm:text-lg"
+              className="cavos-btn-primary mt-6 w-full py-4 text-base sm:text-lg"
               onClick={startPlaying}
             >
               {t("game.start")}
@@ -250,11 +282,11 @@ export function GameSession() {
 
       {/* ── Playing ── */}
       {phase === "playing" && (
-        <div className="relative flex flex-1 flex-col items-center justify-between gap-4 py-2 sm:gap-4">
+        <div className="relative flex flex-1 flex-col items-center justify-between gap-3 py-1 sm:gap-4 sm:py-2">
           {/* Timer */}
-          <div className="flex w-full flex-col items-center gap-3">
+          <div className="flex w-full flex-col items-center gap-2">
             <div
-              className="text-7xl font-black tabular-nums tracking-tighter sm:text-9xl"
+              className="font-[family:var(--font-romagothicbold)] text-[5.4rem] leading-[0.78] tabular-nums sm:text-9xl"
               style={{ color: timerColor, transition: "color 0.4s ease" }}
             >
               {leftSec}
@@ -262,31 +294,31 @@ export function GameSession() {
 
             {warn10 && (
               <p
-                className={`text-center text-xs font-extrabold uppercase tracking-[0.25em] sm:text-lg ${
-                  warn5 ? "text-red-600" : "text-orange-600"
+                className={`min-h-6 text-center text-xs font-extrabold uppercase tracking-[0.2em] sm:text-lg ${
+                  warn5 ? "text-[#ff8a80]" : "text-[var(--btc-gold)]"
                 }`}
               >
                 {warn5 ? t("game.warn5") : t("game.warn10")}
               </p>
             )}
 
-            <div className="w-full rounded-[1.6rem] border border-white/60 bg-white/74 px-4 py-3 text-center shadow-[0_18px_40px_rgba(69,39,15,0.08)] backdrop-blur-md">
+            <div className="tap-card grid min-h-[5.7rem] w-full grid-cols-2 items-center gap-2 px-3 py-3 text-center backdrop-blur-md sm:min-h-[7rem] sm:px-4">
               <p
-                className="text-3xl font-black tabular-nums tracking-tight sm:text-5xl"
-                style={{ color: "#b45309" }}
+                className="min-w-0 truncate text-2xl font-black tabular-nums sm:text-4xl"
+                style={{ color: "var(--btc-gold)" }}
               >
                 {formatImaginaryBtc(liveBtcMined, intlLocale)}
               </p>
               {spotPriceLoading && spotPriceUsd == null && (
-                <p className="mt-1 text-[10px] text-black/35">{t("game.loadingPrice")}</p>
+                <p className="text-[10px] text-[var(--cavos-subtle)]">{t("game.loadingPrice")}</p>
               )}
               {!spotPriceLoading && spotPriceUsd == null && spotPriceError && (
-                <p className="mt-1 text-[10px] text-black/35">{t("game.usdUnavailable")}</p>
+                <p className="text-[10px] text-[var(--cavos-subtle)]">{t("game.usdUnavailable")}</p>
               )}
               {liveUsdMined != null && (
                 <p
-                  className="mt-1 text-3xl font-black tabular-nums tracking-tight drop-shadow-sm sm:text-5xl"
-                  style={{ color: "#059669" }}
+                  className="min-w-0 truncate text-2xl font-black tabular-nums drop-shadow-sm sm:text-4xl"
+                  style={{ color: "var(--cavos-green)" }}
                   aria-live="polite"
                   aria-atomic="true"
                 >
@@ -297,7 +329,7 @@ export function GameSession() {
           </div>
 
           {/* Tap button with bean particles */}
-          <div className="relative flex flex-1 items-center justify-center py-2 sm:mt-3 sm:flex-none">
+          <div className="relative flex min-h-[19rem] flex-1 items-center justify-center py-1 sm:mt-2 sm:min-h-[20rem] sm:flex-none">
             {beans.map((b) => (
               <Image
                 key={b.id}
@@ -325,25 +357,25 @@ export function GameSession() {
             <button
               type="button"
               onClick={onTap}
-              className="relative z-20 flex touch-manipulation select-none items-center justify-center rounded-full transition-transform active:scale-90"
+              className="tap-pop relative z-20 flex touch-manipulation select-none items-center justify-center rounded-full transition-transform active:scale-90"
               style={{
-                width: "min(16rem, 82vw)",
-                height: "min(16rem, 82vw)",
+                width: "min(18.5rem, 86vw)",
+                height: "min(18.5rem, 86vw)",
                 background: warn5
-                  ? "radial-gradient(circle, #fef2f2 0%, #fecaca 100%)"
+                  ? "radial-gradient(circle, #ffdedb 0%, #ef4444 100%)"
                   : warn10
-                    ? "radial-gradient(circle, #fff7ed 0%, #fed7aa 100%)"
-                    : "radial-gradient(circle, #fffbeb 0%, #fde68a 100%)",
+                    ? "radial-gradient(circle, #ffe5b4 0%, #f97316 100%)"
+                    : "radial-gradient(circle, #fff2b5 0%, #f7931a 100%)",
                 border: warn5
-                  ? "4px solid #ef4444"
+                  ? "5px solid #ff8a80"
                   : warn10
-                    ? "4px solid #f97316"
-                    : "4px solid #f59e0b",
+                    ? "5px solid #ffbf5f"
+                    : "5px solid #ffc857",
                 boxShadow: warn5
-                  ? "0 0 50px rgba(239,68,68,0.4), inset 0 -4px 12px rgba(239,68,68,0.15)"
+                  ? "0 0 0 10px rgba(255,107,95,0.12), 0 0 60px rgba(239,68,68,0.55), inset 0 -8px 18px rgba(63,15,12,0.24)"
                   : warn10
-                    ? "0 0 40px rgba(249,115,22,0.35), inset 0 -4px 12px rgba(249,115,22,0.15)"
-                    : "0 8px 32px rgba(245,158,11,0.3), inset 0 -4px 12px rgba(245,158,11,0.1)",
+                    ? "0 0 0 10px rgba(249,115,22,0.12), 0 0 48px rgba(249,115,22,0.5), inset 0 -8px 18px rgba(63,31,12,0.22)"
+                    : "0 16px 48px rgba(247,147,26,0.36), 0 0 0 10px rgba(255,200,87,0.08), inset 0 -8px 18px rgba(63,31,12,0.18)",
                 transition: "background 0.4s, border-color 0.4s, box-shadow 0.4s",
               }}
             >
@@ -352,14 +384,14 @@ export function GameSession() {
                 alt="Tap"
                 width={80}
                 height={80}
-                className="pointer-events-none h-[38%] w-[38%] object-contain drop-shadow-md"
+                className="pointer-events-none h-[42%] w-[42%] object-contain drop-shadow-md"
                 draggable={false}
                 priority
               />
               <span
-                className="absolute bottom-[14%] text-xs font-bold tabular-nums sm:text-xs"
+                className="absolute bottom-[13%] rounded-full bg-black/20 px-3 py-1 text-xs font-black uppercase tabular-nums text-[#2a1205] sm:text-xs"
                 style={{
-                  color: warn5 ? "#991b1b" : warn10 ? "#9a3412" : "#92400e",
+                  color: warn5 ? "#3a0807" : warn10 ? "#3b1705" : "#2a1205",
                 }}
               >
                 {tapTick} taps
@@ -389,8 +421,8 @@ export function GameSession() {
 
       {/* ── Done (popup overlay like rules) ── */}
       {phase === "done" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-          <div className="card w-full max-w-sm px-6 py-9 text-center sm:max-w-sm sm:px-8 sm:py-11">
+        <div className="mobile-safe-bottom fixed inset-0 z-50 flex items-end justify-center bg-black/68 p-3 backdrop-blur-md sm:items-center sm:p-4">
+          <div className="card result-sheet w-full max-w-sm px-5 pb-7 pt-6 text-center sm:max-w-sm sm:px-8 sm:py-10">
             <p className="text-3xl leading-none" aria-hidden>
               🎉
             </p>
@@ -399,7 +431,7 @@ export function GameSession() {
             </h2>
 
             <p
-              className="mt-6 font-[family:var(--font-romagothicbold)] leading-none tracking-[-0.05em] text-[#120c08]"
+              className="mt-5 font-[family:var(--font-romagothicbold)] leading-none text-[var(--cavos-cream)]"
               style={{ fontSize: "clamp(3rem, 12vw, 4.5rem)" }}
             >
               {finalTaps.toLocaleString(intlLocale)}
@@ -408,14 +440,14 @@ export function GameSession() {
               {t("common.taps")}
             </p>
 
-            <div className="mx-auto mt-6 w-fit rounded-full bg-[var(--btc-orange-soft)] px-4 py-2">
-              <p className="text-base font-bold tabular-nums text-[#b45309] sm:text-lg">
+            <div className="bg-btc-soft mx-auto mt-6 w-fit rounded-full border border-[var(--cavos-border)] px-4 py-2">
+              <p className="text-base font-bold tabular-nums text-[var(--btc-gold)] sm:text-lg">
                 {formatImaginaryBtc(btcMined, intlLocale)}
               </p>
             </div>
 
             {priceUsd != null && usdApprox != null && (
-              <p className="mt-4 text-xl font-extrabold tabular-nums text-[#059669] sm:text-2xl">
+              <p className="mt-4 text-xl font-extrabold tabular-nums text-[var(--cavos-green)] sm:text-2xl">
                 ≈{" "}
                 {usdApprox.toLocaleString(intlLocale, {
                   style: "currency",
@@ -431,10 +463,32 @@ export function GameSession() {
               </p>
             )}
 
+            <div className="mx-auto mt-4 max-w-xs rounded-[0.85rem] border border-[var(--cavos-border)] bg-black/18 px-4 py-3 text-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--cavos-subtle)]">
+                {submitState === "submitting"
+                  ? t("game.onchainSubmitting")
+                  : submitState === "submitted"
+                    ? t("game.onchainSubmitted")
+                    : submitState === "error"
+                      ? t("game.onchainError")
+                      : t("game.onchainReady")}
+              </p>
+              {txHash && (
+                <a
+                  href={`https://sepolia.voyager.online/tx/${txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 block truncate text-[11px] font-semibold text-[var(--btc-gold)] underline underline-offset-2"
+                >
+                  {txHash.slice(0, 10)}…{txHash.slice(-6)}
+                </a>
+              )}
+            </div>
+
             <div className="mt-8 flex flex-col gap-2.5">
               <button
                 type="button"
-                className="cavos-btn-primary w-full py-4 text-base font-semibold sm:text-lg"
+                className="cavos-btn-primary w-full py-4 text-base sm:text-lg"
                 onClick={() => {
                   setPriceUsd(null);
                   setPriceUnavailable(false);
@@ -446,7 +500,7 @@ export function GameSession() {
               </button>
               <button
                 type="button"
-                className="w-full py-3 text-sm font-semibold text-[var(--cavos-subtle)] transition-colors hover:text-[#0A0908]"
+                className="min-h-11 w-full py-3 text-sm font-semibold text-[var(--cavos-subtle)] transition-colors hover:text-[var(--cavos-cream)]"
                 onClick={() => router.push("/")}
               >
                 {t("game.backToProfile")}

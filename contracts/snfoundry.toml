@@ -1,0 +1,5 @@
+[sncast.sepolia]
+url = "https://starknet-sepolia-rpc.publicnode.com/"
+account = "my_account"
+accounts-file = "/Users/adran/.starknet_accounts/starknet_open_zeppelin_accounts.json"
+block-explorer = "Voyager"

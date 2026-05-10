@@ -6,7 +6,7 @@ import { geist, romagothicbold } from "@/lib/fonts";
 import "./globals.css";
 
 export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
+  themeColor: "#120b07",
   width: "device-width",
   initialScale: 1,
 };
@@ -28,7 +28,7 @@ export default function RootLayout({
       className={`${romagothicbold.variable} ${geist.variable} h-full`}
     >
       <body className="flex min-h-full flex-col antialiased">
-        <div id="app-shell" className="relative isolate flex min-h-screen flex-col overflow-x-hidden bg-white/80 transition-colors duration-500">
+        <div id="app-shell" className="bg-cavos-shell relative isolate flex min-h-screen flex-col overflow-x-hidden transition-colors duration-500">
           <CoffeeRainBackground />
           <Providers>
             <div className="relative z-10 flex flex-1 flex-col">{children}</div>

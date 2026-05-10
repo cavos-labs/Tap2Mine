@@ -1,5 +1,6 @@
 export type User = {
   username: string;
+  address?: string;
 };
 
 /** Persisted locally (taps only; BTC is derived with BTC_PER_TAP). */
@@ -9,6 +10,7 @@ export type LeaderboardStoredEntry = {
 };
 
 export type LeaderboardRow = {
+  address?: string;
   username: string;
   /** Best tap count in a single round. */
   bestTaps: number;
@@ -21,4 +23,13 @@ export type GameRound = {
   playedAt: number;
   taps: number;
   btcMined: number;
+  txHash?: string;
+};
+
+export type OnchainPlayer = {
+  address: string;
+  username: string;
+  bestTaps: number;
+  roundsPlayed: number;
+  lastPlayedAt: number;
 };
