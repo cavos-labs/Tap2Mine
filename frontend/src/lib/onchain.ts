@@ -2,7 +2,7 @@ import { CallData, RpcProvider, byteArray, num } from "starknet";
 import type { LeaderboardRow, OnchainPlayer } from "./types";
 
 export const TAP2MINE_CONTRACT_ADDRESS =
-  "0x065e4c02e8ccc1858b9c26052e3aa80f0b59389430b9c4d8846aa6ec96d3a7ca";
+  "0x06452f3c45f0213f71619a339baaab4705b284613bc39cd190faa07d2a4ab99d";
 
 export const TAP2MINE_CLASS_HASH =
   "0x68343ddb2a9a1c7941f7868e1a3f7212e2dd53dc7a4efd62fa25f17d5d2ce17";

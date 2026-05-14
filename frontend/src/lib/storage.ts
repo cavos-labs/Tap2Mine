@@ -1,10 +1,12 @@
 import type { GameRound, LeaderboardStoredEntry } from "./types";
+import { TAP2MINE_CONTRACT_ADDRESS } from "./onchain";
 
-const KEY_USER = "tap2mine_user";
-const KEY_BEST = "tap2mine_best_taps";
-const KEY_HISTORY = "tap2mine_history";
-const KEY_BOARD = "tap2mine_leaderboard_entries";
-const KEY_REGISTRY = "tap2mine_registered_users";
+const STORAGE_SCOPE = TAP2MINE_CONTRACT_ADDRESS.toLowerCase();
+const KEY_USER = `tap2mine_user:${STORAGE_SCOPE}`;
+const KEY_BEST = `tap2mine_best_taps:${STORAGE_SCOPE}`;
+const KEY_HISTORY = `tap2mine_history:${STORAGE_SCOPE}`;
+const KEY_BOARD = `tap2mine_leaderboard_entries:${STORAGE_SCOPE}`;
+const KEY_REGISTRY = `tap2mine_registered_users:${STORAGE_SCOPE}`;
 
 function ls(): Storage | null {
   if (typeof window === "undefined") return null;
