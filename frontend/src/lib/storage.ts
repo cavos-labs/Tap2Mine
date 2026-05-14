@@ -1,5 +1,5 @@
 import type { GameRound, LeaderboardStoredEntry } from "./types";
-import { TAP2MINE_CONTRACT_ADDRESS } from "./onchain";
+import { TAP2MINE_CONTRACT_ADDRESS } from "./contract-config";
 
 const STORAGE_SCOPE = TAP2MINE_CONTRACT_ADDRESS.toLowerCase();
 const KEY_USER = `tap2mine_user:${STORAGE_SCOPE}`;

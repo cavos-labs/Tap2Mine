@@ -1,6 +1,7 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 const COFFEE_RAIN_BEANS = [
@@ -29,6 +30,8 @@ const COFFEE_RAIN_PASSES = [
   { key: "far", className: "coffee-rain-layer coffee-rain-layer--far", leftShift: 2.5, delayShift: -5, durationShift: 3, opacityDelta: -0.02, scaleOffset: -0.12, size: "28px" },
 ] as const;
 
+type MotionMode = "full" | "lite" | "none";
+
 function shiftPercent(left: string, shift: number) {
   const value = Number.parseFloat(left);
   if (Number.isNaN(value)) return left;
@@ -43,14 +46,46 @@ function shiftTime(raw: string, deltaSeconds: number) {
 }
 
 export function CoffeeRainBackground() {
+  const [motionMode, setMotionMode] = useState<MotionMode>("lite");
+
+  useEffect(() => {
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+
+    const updateMode = () => {
+      if (reducedQuery.matches) {
+        setMotionMode("none");
+      } else if (mobileQuery.matches) {
+        setMotionMode("lite");
+      } else {
+        setMotionMode("full");
+      }
+    };
+
+    updateMode();
+    reducedQuery.addEventListener("change", updateMode);
+    mobileQuery.addEventListener("change", updateMode);
+    return () => {
+      reducedQuery.removeEventListener("change", updateMode);
+      mobileQuery.removeEventListener("change", updateMode);
+    };
+  }, []);
+
+  const passes =
+    motionMode === "full" ? COFFEE_RAIN_PASSES : COFFEE_RAIN_PASSES.slice(0, 1);
+  const beans =
+    motionMode === "full"
+      ? COFFEE_RAIN_BEANS
+      : COFFEE_RAIN_BEANS.filter((_, index) => index % 2 === 0).slice(0, 8);
+
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden>
       <div className="home-ambient-orb home-ambient-orb--top" />
       <div className="home-ambient-orb home-ambient-orb--side" />
       <div className="home-grid-mask" />
-      {COFFEE_RAIN_PASSES.map((pass, passIndex) => (
+      {motionMode !== "none" && passes.map((pass) => (
         <div key={pass.key} className={pass.className}>
-          {COFFEE_RAIN_BEANS.map((bean, index) => {
+          {beans.map((bean, index) => {
             const isFar = pass.className.includes("--far");
 
             return (
@@ -75,7 +110,7 @@ export function CoffeeRainBackground() {
                   height={356}
                   className="coffee-rain-image"
                   sizes={pass.size}
-                  priority={passIndex === 0 && index < 4}
+                  loading="lazy"
                 />
               </span>
             );

@@ -38,6 +38,14 @@ type ConfettiPiece = {
 
 let confettiId = 0;
 
+function prefersLowerParticleCount() {
+  if (typeof window === "undefined") return true;
+  return (
+    window.matchMedia("(max-width: 640px)").matches ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
 function generateConfetti(count: number): ConfettiPiece[] {
   const pieces: ConfettiPiece[] = [];
   for (let i = 0; i < count; i++) {
@@ -144,7 +152,7 @@ export function GameSession() {
         setSubmitState("error");
       });
     setPhase("done");
-    setConfetti(generateConfetti(60));
+    setConfetti(generateConfetti(prefersLowerParticleCount() ? 28 : 52));
     setTimeout(() => setConfetti([]), 4000);
     fetchBtcPriceUsd()
       .then((r) => {
@@ -169,7 +177,7 @@ export function GameSession() {
         window.clearInterval(id);
         finish();
       }
-    }, 40);
+    }, 80);
     return () => {
       completed = true;
       window.clearInterval(id);
@@ -201,7 +209,8 @@ export function GameSession() {
     const id = ++beanId;
     setBeans((prev) => {
       const next = [...prev, { id, dx, dy, rot }];
-      return next.length > 15 ? next.slice(-15) : next;
+      const maxParticles = prefersLowerParticleCount() ? 7 : 12;
+      return next.length > maxParticles ? next.slice(-maxParticles) : next;
     });
     setTimeout(() => {
       setBeans((prev) => prev.filter((b) => b.id !== id));
@@ -331,12 +340,8 @@ export function GameSession() {
           {/* Tap button with bean particles */}
           <div className="relative flex min-h-[19rem] flex-1 items-center justify-center py-1 sm:mt-2 sm:min-h-[20rem] sm:flex-none">
             {beans.map((b) => (
-              <Image
+              <span
                 key={b.id}
-                src="/partners/cafe.png"
-                alt=""
-                width={36}
-                height={36}
                 className="coffee-bean"
                 style={
                   {
@@ -344,13 +349,16 @@ export function GameSession() {
                     left: "50%",
                     marginTop: -14,
                     marginLeft: -14,
+                    backgroundImage: "url('/partners/cafe.png')",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "contain",
                     "--dx": `${b.dx}px`,
                     "--dy": `${b.dy}px`,
                     "--rot": `${b.rot}deg`,
                   } as React.CSSProperties
                 }
                 aria-hidden
-                draggable={false}
               />
             ))}
 
